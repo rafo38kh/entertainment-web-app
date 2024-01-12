@@ -1,10 +1,18 @@
 "use client";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import api from "@/lib/api";
+
+import { useBookmarks } from "@/hooks/useBookmarks";
+
+import Auth from "@/components/Auth";
+
 import { GenresData, MoviesData } from "@/types";
 
 export default function Home() {
+  const { getBookmarks, addBookmarks } = useBookmarks();
+
   const {
     data: genresData,
     error: genresError,
@@ -15,18 +23,16 @@ export default function Home() {
     queryFn: api.getGenres,
   });
 
-  // const { data: moveiesData } = useQuery<MoviesData>({
-  //   queryKey: ["movies"],
-  //   queryFn: api.getMovies,
-  // });
   const { data: moveiesData } = useQuery<MoviesData>({
     queryKey: ["movies"],
     queryFn: api.getMovies,
   });
 
-  console.log("Movies", moveiesData?.results.at(0));
+  const user = {
+    id: "534535",
+  };
 
-  const movie = moveiesData?.results;
+  const movies = moveiesData?.results;
 
   if (isGenresError)
     return (
@@ -43,14 +49,21 @@ export default function Home() {
         <span key={genre?.id}>{genre?.name}</span>
       ))} */}
       <div className="grid grid-cols-5 grid-rows-5">
-        {movie?.map((el) => (
-          <div key={el.id} className="flex flex-col gap-2">
-            <span>{el.title}</span>
-            <span>{el.release_date}</span>
-            <span>{el.original_language}</span>
+        {movies?.map((movie) => (
+          <div key={movie.id} className="flex flex-col gap-2">
+            <span>{movie.title}</span>
+            <span>{movie.release_date}</span>
+            <span>{movie.original_language}</span>
+            <button
+              type="button"
+              onClick={() => addBookmarks(movie.id, user.id)}
+            >
+              bookmark
+            </button>
           </div>
         ))}
       </div>
+      <Auth />
     </div>
   );
 }
