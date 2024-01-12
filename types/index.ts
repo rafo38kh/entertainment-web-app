@@ -1,3 +1,17 @@
+export type User = {
+  name: string;
+  email: string;
+  userID: string;
+  isAuth: boolean;
+  profilePhoto: string;
+};
+
+export type MovieBookmark = {
+  docId: string;
+  userID: string;
+  movieId: number;
+};
+
 export type MoviesData = {
   id: number;
   results: MovieData[];
