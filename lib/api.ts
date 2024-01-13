@@ -28,6 +28,11 @@ const getMovies = async () => {
   return response.data;
 };
 
+const getMovie = async (id: string) => {
+  const response = await axiosFetch.get<MovieData>(`/movie/${id}`);
+  return response.data;
+};
+
 const api = {
   getGenres,
   getMovies,
