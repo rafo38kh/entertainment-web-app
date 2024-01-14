@@ -1,6 +1,13 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 
-import { GenresData, MovieData, MoviesData } from "@/types";
+import {
+  GenresData,
+  MovieData,
+  MoviesData,
+  PopularMovies,
+  TVData,
+  TVShowData,
+} from "@/types";
 
 export const axiosFetch: AxiosInstance = axios.create({
   baseURL: "https://api.themoviedb.org/3",
@@ -23,19 +30,46 @@ const getGenres = async () => {
 
 const getMovies = async () => {
   const response = await axiosFetch.get<MoviesData>(
-    `/movie/popular?language=en-US&page=1`
+    `/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc`
+  );
+  return response.data?.results;
+};
+
+const getMovie = async (id: string) => {
+  const response = await axiosFetch.get<MovieData>(
+    `/movie/${id}?language=en-US`
   );
   return response.data;
 };
 
-const getMovie = async (id: string) => {
-  const response = await axiosFetch.get<MovieData>(`/movie/${id}`);
+const getTvShows = async () => {
+  const response = await axiosFetch.get<{
+    results: TVData[];
+  }>(
+    `/discover/tv?include_adult=false&include_null_first_air_dates=false&language=en-US&page=1&sort_by=popularity.desc`
+  );
+  return response.data?.results;
+};
+
+const getTvShow = async (id: string) => {
+  const response = await axiosFetch.get<TVShowData>(`/tv/${id}?language=en-US`);
   return response.data;
+};
+
+const getPopularMovies = async () => {
+  const response = await axiosFetch.get<{ results: PopularMovies[] }>(
+    "movie/popular?language=en-US&page=1"
+  );
+  return response.data?.results;
 };
 
 const api = {
   getGenres,
   getMovies,
+  getMovie,
+  getTvShows,
+  getTvShow,
+  getPopularMovies,
 };
 
 export default api;
