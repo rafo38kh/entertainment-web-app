@@ -4,6 +4,7 @@ import {
   GenresData,
   MovieData,
   MoviesData,
+  MultiSearchData,
   PopularMovies,
   TVData,
   TVShowData,
@@ -63,6 +64,20 @@ const getPopularMovies = async () => {
   return response.data?.results;
 };
 
+const getUpcomingMovies = async () => {
+  const response = await axiosFetch.get<{ results: PopularMovies[] }>(
+    "movie/upcoming?language=en-US&page=1"
+  );
+  return response.data?.results;
+};
+
+const multiSearch = async (query: string) => {
+  const response = await axiosFetch.get<{ results: MultiSearchData[] }>(
+    `search/multi?query=${query}&include_adult=true&language=en-US&page=1`
+  );
+  return response.data?.results;
+};
+
 const api = {
   getGenres,
   getMovies,
@@ -70,6 +85,8 @@ const api = {
   getTvShows,
   getTvShow,
   getPopularMovies,
+  getUpcomingMovies,
+  multiSearch,
 };
 
 export default api;

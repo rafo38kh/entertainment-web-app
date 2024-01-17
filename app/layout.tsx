@@ -1,8 +1,11 @@
+import { ReactNode } from "react";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
+
+import Search from "@/components/Search";
 import Providers from "@/components/Providers";
-import { ReactNode } from "react";
+import Navigation from "@/components/Navigation";
 
 const outfit = Outfit({ subsets: ["latin"], weight: ["300"] });
 
@@ -18,8 +21,12 @@ type RootLayoutProps = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body className={outfit.className}>
-        <Providers>{children}</Providers>
+      <body className={` bg-movieDarkBlue text-white ${outfit.className}`}>
+        <Providers>
+          <Navigation />
+          <Search />
+          {children}
+        </Providers>
       </body>
     </html>
   );

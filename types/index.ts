@@ -8,6 +8,7 @@ export type User = {
 
 export type MovieBookmark = {
   docId: string;
+  type: "movie" | "tv";
   userID: string;
   movieId: number;
 };
@@ -34,6 +35,7 @@ export type MovieData = {
   original_title: string;
   release_date: string;
   genres: GenreData[];
+  genre_ids: number[];
 } & GeneralTypes;
 
 export type TVData = {
@@ -96,3 +98,15 @@ export type PopularMovies = Pick<
   MovieData,
   "id" | "adult" | "backdrop_path" | "title" | "release_date"
 >;
+
+export type MultiSearchData = Pick<
+  PopularMoviesData,
+  "id" | "adult" | "poster_path"
+> & {
+  media_type: "tv" | "movie";
+  original_name: string;
+  name?: string;
+  title?: string;
+  release_date?: string;
+  first_air_date?: string;
+};
