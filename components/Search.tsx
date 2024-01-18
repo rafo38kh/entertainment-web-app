@@ -26,7 +26,7 @@ export default function Search() {
   return (
     <div>
       <form
-        className="flex flex-row justify-center items-center p-4"
+        className="flex flex-row justify-center items-center gap-2 p-4"
         action="#"
       >
         <label htmlFor="">
@@ -38,7 +38,7 @@ export default function Search() {
           </svg>
         </label>
         <input
-          className="w-full p-2 bg-movieDarkBlue outline-none"
+          className="w-full bg-movieDarkBlue outline-none"
           type="text"
           value={input}
           placeholder="Search for movies or TV series"

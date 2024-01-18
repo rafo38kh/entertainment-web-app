@@ -8,7 +8,5 @@ export const useGetUsersInfo = () => {
 
   const parsedUser = user ? (JSON.parse(user) as User) : null;
 
-  // console.log("parsedUser", parsedUser?.profilePhoto);
-
   return parsedUser;
 };

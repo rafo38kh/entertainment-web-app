@@ -1,9 +1,9 @@
 "use client";
-
 import { useQuery } from "@tanstack/react-query";
-import { TVShowData } from "@/types";
+
 import api from "@/lib/api";
 
+import { TVShowData } from "@/types";
 type Params = {
   params: {
     id: string;

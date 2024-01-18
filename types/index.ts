@@ -94,6 +94,18 @@ export type PopularMoviesData = {
   first_air_date?: string;
 };
 
+export type MovieImages = {
+  backdrops: {
+    aspect_ratio: number;
+    height: number;
+    iso_639_1: boolean;
+    file_path: string;
+    vote_average: number;
+    vote_count: number;
+    width: number;
+  }[];
+};
+
 export type PopularMovies = Pick<
   MovieData,
   "id" | "adult" | "backdrop_path" | "title" | "release_date"

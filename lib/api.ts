@@ -8,6 +8,7 @@ import {
   PopularMovies,
   TVData,
   TVShowData,
+  MovieImages,
 } from "@/types";
 
 export const axiosFetch: AxiosInstance = axios.create({
@@ -71,6 +72,18 @@ const getUpcomingMovies = async () => {
   return response.data?.results;
 };
 
+const getNowPlayingMovies = async () => {
+  const response = await axiosFetch.get<{ results: PopularMovies[] }>(
+    "movie/now_playing?language=en-US&page=1"
+  );
+  return response.data?.results;
+};
+
+const getMovieImages = async (id: number | undefined) => {
+  const response = await axiosFetch.get<MovieImages>(`/movie/${id}/images`);
+  return response.data;
+};
+
 const multiSearch = async (query: string) => {
   const response = await axiosFetch.get<{ results: MultiSearchData[] }>(
     `search/multi?query=${query}&include_adult=true&language=en-US&page=1`
@@ -79,14 +92,16 @@ const multiSearch = async (query: string) => {
 };
 
 const api = {
+  getMovie,
   getGenres,
   getMovies,
-  getMovie,
-  getTvShows,
   getTvShow,
+  getTvShows,
+  multiSearch,
   getPopularMovies,
   getUpcomingMovies,
-  multiSearch,
+  getNowPlayingMovies,
+  getMovieImages,
 };
 
 export default api;

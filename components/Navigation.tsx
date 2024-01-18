@@ -1,9 +1,11 @@
-import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 
+import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+
 export default function Navigation() {
-  const user = useGetUsersInfo();
+  const parsedUser = useGetUsersInfo();
 
   return (
     <div className="w-full bg-semiDarkBlue p-4 flex flex-row items-center justify-between">
@@ -59,16 +61,16 @@ export default function Navigation() {
         </Link>
       </div>
 
-      {user && (
-        <div className="aspect-square rounded-full overflow-hidden w-9">
+      <div className="aspect-square rounded-full overflow-hidden w-9">
+        {parsedUser?.profilePhoto && (
           <Image
             height={100}
             width={100}
-            src={user?.profilePhoto}
             alt="Picture of the author"
+            src={parsedUser?.profilePhoto}
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

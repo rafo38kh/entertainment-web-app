@@ -19,14 +19,14 @@ export default function Home() {
     queryFn: api.getGenres,
   });
 
-  const { data: popularMoveiesData } = useQuery<PopularMovies[]>({
-    queryKey: ["popularMovies"],
-    queryFn: api.getPopularMovies,
-  });
-
   const { data: upcomingMoviesData } = useQuery<PopularMovies[]>({
     queryKey: ["upcomingMovies"],
     queryFn: api.getUpcomingMovies,
+  });
+
+  const { data: nowPlayingMoviesData } = useQuery<PopularMovies[]>({
+    queryKey: ["nowPlayingMovies"],
+    queryFn: api.getNowPlayingMovies,
   });
 
   if (isGenresLoading) return <div>Loading...</div>;
@@ -34,15 +34,15 @@ export default function Home() {
   if (isGenresError) return <span>{genresError.message}</span>;
 
   return (
-    <div>
-      <div className="pl-4">
-        <span className="text-2xl">Popular Movies</span>
-        <ScrollGrid type="movie" data={popularMoveiesData ?? []} />
-      </div>
-
+    <div className="flex flex-col gap-8">
       <div className="pl-4">
         <span className="text-2xl">Upcoming</span>
         <ScrollGrid type="movie" data={upcomingMoviesData ?? []} />
+      </div>
+
+      <div className="pl-4">
+        <span className="text-2xl">Now Playing</span>
+        <ScrollGrid type="movie" data={nowPlayingMoviesData ?? []} />
       </div>
 
       <Auth />

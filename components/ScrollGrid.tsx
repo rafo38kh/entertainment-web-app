@@ -18,7 +18,7 @@ function ScrollGrid({ data, type }: Movie) {
   const parsedUser = useGetUsersInfo();
 
   return (
-    <ul className="flex gap-4 overflow-x-scroll no-scrollbar ">
+    <ul className="flex gap-4 overflow-x-scroll no-scrollbar mt-4">
       {data?.map((el, index) => (
         <li key={index}>
           <Link href={`/movie/${el?.id}`}>
@@ -28,7 +28,7 @@ function ScrollGrid({ data, type }: Movie) {
                   el?.backdrop_path &&
                   `url(https://image.tmdb.org/t/p/w400${el.backdrop_path})`,
               }}
-              className="border flex flex-col justify-end bg-no-repeat bg-cover w-full h-full relative rounded-lg overflow-hidden"
+              className="border flex flex-col justify-end bg-no-repeat bg-cover  relative rounded-lg overflow-hidden h-36 w-72"
             >
               <button
                 className="absolute top-4 right-4 aspect-square rounded-full bg-black/35 flex items-center justify-center p-3"
