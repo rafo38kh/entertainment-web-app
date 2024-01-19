@@ -88,6 +88,7 @@ export default function Modal({
         <ul className="flex flex-row gap-2">
           {emptyArray?.map((el, index) => (
             <button
+              key={index}
               className={`p-1  rounded-full ${
                 index === imageIndex
                   ? "bg-movieGreyishBlue"

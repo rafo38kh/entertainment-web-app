@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import Link from "next/link";
@@ -12,6 +13,7 @@ import useDebounce from "@/hooks/useDebounce";
 import { MultiSearchData } from "@/types";
 
 export default function Search() {
+  const pathname = usePathname();
   const [input, setInput] = useState("");
 
   const debouncedValue = useDebounce({ initialSearchTerm: input, delay: 1500 });
@@ -23,6 +25,10 @@ export default function Search() {
     queryFn: () => api.multiSearch(debouncedValue || ""),
     enabled: !!debouncedValue,
   });
+
+  useEffect(() => {
+    setInput("");
+  }, [pathname]);
 
   return (
     <div>
@@ -49,62 +55,64 @@ export default function Search() {
         {isMultiSearchFetching && <span>Loading...</span>}
       </form>
 
-      <ul className="flex flex-col">
-        {multiSearchData?.map((data) => (
-          <li className="border mb-2" key={data?.id}>
-            <Link
-              onClick={() => setInput("")}
-              href={
-                data?.media_type === "movie"
-                  ? `/movie/${data?.id}`
-                  : `/tvshow/${data?.id}`
-              }
-              className="flex flex-row gap-2"
-            >
-              {data?.poster_path ? (
-                <Image
-                  width={50}
-                  height={50}
-                  alt={data?.original_name || ""}
-                  src={`https://image.tmdb.org/t/p/w200${data?.poster_path}`}
-                />
-              ) : (
-                <div className="h-[75px] w-[50px] flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z"
-                    />
-                  </svg>
-                </div>
-              )}
+      {input && (
+        <ul className="flex flex-col">
+          {multiSearchData?.map((data) => (
+            <li className="border mb-2" key={data?.id}>
+              <Link
+                href={
+                  data?.media_type === "movie"
+                    ? `/movie/${data?.id}`
+                    : `/tvshow/${data?.id}`
+                }
+                onClick={() => setInput("")}
+                className="flex flex-row gap-2"
+              >
+                {data?.poster_path ? (
+                  <Image
+                    width={50}
+                    height={50}
+                    alt={data?.original_name || ""}
+                    src={`https://image.tmdb.org/t/p/w200${data?.poster_path}`}
+                  />
+                ) : (
+                  <div className="h-[75px] w-[50px] flex items-center justify-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 48 48"
+                      width="96px"
+                      height="96px"
+                    >
+                      <path fill="#90CAF9" d="M40 45L8 45 8 3 30 3 40 13z" />
+                      <path fill="#E1F5FE" d="M38.5 14L29 14 29 4.5z" />
+                      <path fill="#1565C0" d="M21 23L14 33 28 33z" />
+                      <path
+                        fill="#1976D2"
+                        d="M28 26.4L23 33 33 33zM31.5 23A1.5 1.5 0 1 0 31.5 26 1.5 1.5 0 1 0 31.5 23z"
+                      />
+                    </svg>
+                  </div>
+                )}
 
-              <div className="flex flex-col">
-                <span>
-                  {data?.media_type === "movie" ? data?.title : data?.name}
-                </span>
-                <div className="flex flex-row gap-2">
-                  <span>{data?.adult && "18+"}</span>
-                  <span>{data?.media_type}</span>
+                <div className="flex flex-col">
                   <span>
-                    {data?.media_type === "movie"
-                      ? data?.release_date?.slice(0, 4)
-                      : data?.first_air_date?.slice(0, 4)}
+                    {data?.media_type === "movie" ? data?.title : data?.name}
                   </span>
+                  <div className="flex flex-row gap-2">
+                    <span>{data?.adult && "18+"}</span>
+                    <span>{data?.media_type}</span>
+                    <span>
+                      {data?.media_type === "movie"
+                        ? data?.release_date?.slice(0, 4)
+                        : data?.first_air_date?.slice(0, 4)}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
