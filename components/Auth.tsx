@@ -1,14 +1,17 @@
+import { useEffect, useState } from "react";
+
 import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "@/config/firebase";
 
-import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
-import { useEffect, useState } from "react";
-
 export default function Auth() {
-  const { user } = useGetUsersInfo();
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
+    const user =
+      typeof window !== "undefined"
+        ? window?.localStorage?.getItem("user")
+        : null;
+
     if (user !== null) setIsAuth(true);
   }, []);
 

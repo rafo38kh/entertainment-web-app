@@ -6,11 +6,7 @@ export const useGetUsersInfo = () => {
       ? window?.localStorage?.getItem("user")
       : null;
 
-  if (user) {
-    const parsedUser = JSON.parse(user) as User;
+  const parsedUser = user ? (JSON.parse(user) as User) : null;
 
-    return { user, parsedUser };
-  }
-
-  return {};
+  return parsedUser;
 };

@@ -1,18 +1,14 @@
 "use client";
-import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import api from "@/lib/api";
 
-import { useBookmarks } from "@/hooks/useBookmarks";
-
 import Auth from "@/components/Auth";
+import ScrollGrid from "@/components/ScrollGrid";
 
-import { GenresData, MoviesData } from "@/types";
+import { GenresData, PopularMovies } from "@/types";
 
 export default function Home() {
-  const { getBookmarks, addBookmarks } = useBookmarks();
-
   const {
     data: genresData,
     error: genresError,
@@ -23,46 +19,32 @@ export default function Home() {
     queryFn: api.getGenres,
   });
 
-  const { data: moveiesData } = useQuery<MoviesData>({
-    queryKey: ["movies"],
-    queryFn: api.getMovies,
+  const { data: upcomingMoviesData } = useQuery<PopularMovies[]>({
+    queryKey: ["upcomingMovies"],
+    queryFn: api.getUpcomingMovies,
   });
 
-  const user = {
-    id: "534535",
-  };
-
-  const movies = moveiesData?.results;
-
-  if (isGenresError)
-    return (
-      <div>
-        <span>{genresError.message}</span>
-      </div>
-    );
+  const { data: nowPlayingMoviesData } = useQuery<PopularMovies[]>({
+    queryKey: ["nowPlayingMovies"],
+    queryFn: api.getNowPlayingMovies,
+  });
 
   if (isGenresLoading) return <div>Loading...</div>;
 
+  if (isGenresError) return <span>{genresError.message}</span>;
+
   return (
-    <div>
-      {/* {genresData?.genres?.map((genre) => (
-        <span key={genre?.id}>{genre?.name}</span>
-      ))} */}
-      <div className="grid grid-cols-5 grid-rows-5">
-        {movies?.map((movie) => (
-          <div key={movie.id} className="flex flex-col gap-2">
-            <span>{movie.title}</span>
-            <span>{movie.release_date}</span>
-            <span>{movie.original_language}</span>
-            <button
-              type="button"
-              onClick={() => addBookmarks(movie.id, user.id)}
-            >
-              bookmark
-            </button>
-          </div>
-        ))}
+    <div className="flex flex-col gap-8">
+      <div className="pl-4">
+        <span className="text-2xl">Upcoming</span>
+        <ScrollGrid type="movie" data={upcomingMoviesData ?? []} />
       </div>
+
+      <div className="pl-4">
+        <span className="text-2xl">Now Playing</span>
+        <ScrollGrid type="movie" data={nowPlayingMoviesData ?? []} />
+      </div>
+
       <Auth />
     </div>
   );

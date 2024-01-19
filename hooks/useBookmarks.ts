@@ -1,4 +1,6 @@
 import {
+  query,
+  where,
   addDoc,
   onSnapshot,
   collection,
@@ -12,9 +14,13 @@ import { MovieBookmark } from "@/types";
 export function useBookmarks() {
   const docCollectionRef = collection(db, "bookmarks");
 
-  const getBookmarks = async () => {
+  const getBookmarks = (
+    userID: string,
+    setState: (value: MovieBookmark[]) => void
+  ) => {
     try {
-      const unsubscribe = onSnapshot(docCollectionRef, (snapshot) => {
+      const docQuery = query(docCollectionRef, where("userID", "==", userID));
+      const unsubscribe = onSnapshot(docQuery, (snapshot) => {
         const bookmarkedMovies: MovieBookmark[] = snapshot.docs.map(
           (doc: QueryDocumentSnapshot) => ({
             ...(doc.data() as MovieBookmark),
@@ -22,7 +28,7 @@ export function useBookmarks() {
           })
         );
 
-        console.log(bookmarkedMovies);
+        setState(bookmarkedMovies);
       });
 
       return unsubscribe;
@@ -31,9 +37,13 @@ export function useBookmarks() {
     }
   };
 
-  const addBookmarks = async (movieId: number, userID: string) => {
+  const addBookmarks = async (
+    movieId: number,
+    userID: string,
+    type: string
+  ) => {
     try {
-      await addDoc(docCollectionRef, { movieId, userID });
+      await addDoc(docCollectionRef, { movieId, userID, type });
     } catch (error) {
       console.log(error);
     }
