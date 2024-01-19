@@ -1,13 +1,15 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { useBookmarks } from "@/hooks/useBookmarks";
-import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+
+import Link from "next/link";
 import Image from "next/image";
 
 import api from "@/lib/api";
 
+import { useBookmarks } from "@/hooks/useBookmarks";
+import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+
 import { TVData } from "@/types";
-import Link from "next/link";
 
 export default function TvShowsPage() {
   const {
@@ -21,10 +23,6 @@ export default function TvShowsPage() {
   });
   const { addBookmarks } = useBookmarks();
   const parsedUser = useGetUsersInfo();
-
-  //   const tvShow = tvData.results;
-
-  //   console.log("tvShowsData", tvShowsData);
 
   return (
     <ul className="grid grid-cols-2 gap-4 p-4">

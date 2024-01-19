@@ -1,7 +1,7 @@
+import { useEffect, useState } from "react";
+
 import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "@/config/firebase";
-
-import { useEffect, useState } from "react";
 
 export default function Auth() {
   const [isAuth, setIsAuth] = useState(false);

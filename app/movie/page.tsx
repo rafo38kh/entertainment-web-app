@@ -6,10 +6,10 @@ import Image from "next/image";
 
 import api from "@/lib/api";
 
+import ScrollGrid from "@/components/ScrollGrid";
+
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import { useBookmarks } from "@/hooks/useBookmarks";
-
-import ScrollGrid from "@/components/ScrollGrid";
 
 import { MoviesData } from "@/types";
 import { PopularMovies } from "@/types";
@@ -73,7 +73,6 @@ export default function page() {
                 <span>{movie?.release_date.slice(0, 4)}</span>
                 <span>{movie?.original_language}</span>
                 <span>{movie.adult ? "18+" : "PG"}</span>
-                {/* <ul>{movie.genres?.at(0)}</ul> */}
               </div>
 
               <span

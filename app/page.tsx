@@ -1,12 +1,12 @@
 "use client";
-
 import { useQuery } from "@tanstack/react-query";
+
 import api from "@/lib/api";
 
 import Auth from "@/components/Auth";
+import ScrollGrid from "@/components/ScrollGrid";
 
 import { GenresData, PopularMovies } from "@/types";
-import ScrollGrid from "@/components/ScrollGrid";
 
 export default function Home() {
   const {

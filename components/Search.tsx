@@ -1,14 +1,15 @@
 "use client";
-import Image from "next/image";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+
+import Link from "next/link";
+import Image from "next/image";
 
 import api from "@/lib/api";
 
 import useDebounce from "@/hooks/useDebounce";
 
 import { MultiSearchData } from "@/types";
-import Link from "next/link";
 
 export default function Search() {
   const [input, setInput] = useState("");
@@ -52,6 +53,7 @@ export default function Search() {
         {multiSearchData?.map((data) => (
           <li className="border mb-2" key={data?.id}>
             <Link
+              onClick={() => setInput("")}
               href={
                 data?.media_type === "movie"
                   ? `/movie/${data?.id}`

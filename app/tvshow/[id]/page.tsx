@@ -21,7 +21,5 @@ export default function TvShowPage({ params }: Params) {
     queryFn: () => api.getTvShow(params?.id),
   });
 
-  console.log("tvData", tvData);
-
   return <div>{tvData?.overview}</div>;
 }

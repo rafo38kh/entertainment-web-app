@@ -1,6 +1,7 @@
+import Link from "next/link";
+
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
-import Link from "next/link";
 
 type Movie = {
   type: "movie" | "tv";

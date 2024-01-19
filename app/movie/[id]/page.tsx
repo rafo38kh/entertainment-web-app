@@ -1,9 +1,12 @@
 "use client";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
 import Link from "next/link";
+
 import api from "@/lib/api";
+
+import Modal from "@/components/Modal";
 
 import { MovieData, MovieImages } from "@/types";
 
@@ -14,13 +17,18 @@ type Params = {
 };
 
 export default function Page({ params }: Params) {
+  const MAX_LENGTH = 5;
+
+  const [imageIndex, setImageIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const {
     data: movieData,
     error: movieError,
     isError: isMovieError,
     isLoading: isMovieLoading,
   } = useQuery<MovieData>({
-    queryKey: ["movie"],
+    queryKey: ["movie", params?.id],
     queryFn: () => api.getMovie(params?.id),
     enabled: !!params?.id,
   });
@@ -31,15 +39,18 @@ export default function Page({ params }: Params) {
     isError: isMovieImagesError,
     isLoading: isMovieImagesLoading,
   } = useQuery<MovieImages>({
-    queryKey: ["images"],
+    queryKey: ["images", movieData?.id],
     queryFn: () => api.getMovieImages(movieData?.id),
     enabled: !!movieData?.id,
   });
 
-  console.log("movieImages", movieImages);
+  const handleOpenImage = (index: number) => {
+    setIsModalOpen(true);
+    setImageIndex(index);
+  };
 
   return (
-    <div>
+    <div className="relative">
       {movieData?.backdrop_path && (
         <Image
           className="w-full mb-6"
@@ -55,8 +66,8 @@ export default function Page({ params }: Params) {
           {movieData?.original_title}
         </span>
         <p>{movieData?.overview}</p>
-        <ul className="flex flex-row gap-2 ">
-          Genre:{" "}
+        <ul className="flex flex-row gap-2 overflow-scroll">
+          Genres:{" "}
           {movieData?.genres?.map((genere, index) => (
             <li
               className="bg-white/90 text-semiDarkBlue px-2  rounded-md"
@@ -72,19 +83,33 @@ export default function Page({ params }: Params) {
         <Link href={`${movieData?.homepage}`}>homepage: link</Link>
         <span>Duration: {movieData?.runtime} min</span>
         <ul className="grid grid-cols-2 gap-2">
-          {movieImages?.backdrops.map((backdrop) => (
+          {movieImages?.backdrops?.slice(0, 6).map((backdrop, index) => (
             <li key={backdrop?.file_path}>
-              <Image
-                className="w-full"
-                width={backdrop?.width}
-                height={backdrop?.height}
-                alt={backdrop?.file_path || ""}
-                src={`https://image.tmdb.org/t/p/w400${backdrop?.file_path}`}
-              />
+              <button
+                aria-label={backdrop.file_path}
+                onClick={() => handleOpenImage(index)}
+              >
+                <Image
+                  className="w-full"
+                  width={backdrop?.width}
+                  height={backdrop?.height}
+                  alt={backdrop?.file_path || ""}
+                  src={`https://image.tmdb.org/t/p/w400${backdrop?.file_path}`}
+                />
+              </button>
             </li>
           ))}
         </ul>
       </div>
+      {isModalOpen && (
+        <Modal
+          maxLegnth={MAX_LENGTH}
+          imageIndex={imageIndex}
+          movieImages={movieImages}
+          setImageIndex={setImageIndex}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
     </div>
   );
 }
