@@ -1,15 +1,25 @@
-import React, { Dispatch, RefObject, SetStateAction } from "react";
+import React, {
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useState,
+  useEffect,
+} from "react";
+import { createPortal } from "react-dom";
 
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 
 import useOutsideClick from "@/hooks/useOutsideClick";
 
-import { MovieImages } from "@/types";
+import { MovieImages, TVShowImages } from "@/types";
 
 type ModalProps = {
   maxLegnth: number;
   imageIndex: number;
+  isModalOpen: boolean;
   movieImages: MovieImages | undefined;
+  tvShowImages: TVShowImages | undefined;
   setImageIndex: Dispatch<SetStateAction<number>>;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 };
@@ -17,11 +27,20 @@ type ModalProps = {
 export default function Modal({
   maxLegnth,
   imageIndex,
+  isModalOpen,
   setImageIndex,
   setIsModalOpen,
   movieImages,
+  tvShowImages,
 }: ModalProps) {
   const emptyArray = Array.from({ length: 6 }, () => Math.random());
+  const [mounted, setMounted] = useState(false);
+
+  const pathname = usePathname();
+
+  useEffect(() => setMounted(true), []);
+
+  if (!isModalOpen) return null;
 
   const ref = useOutsideClick(() =>
     setIsModalOpen(false)
@@ -39,66 +58,84 @@ export default function Modal({
     } else setImageIndex(imageIndex + 1);
   };
 
-  return (
-    <div className="w-full h-full bg-black/60 absolute top-0 left-0 p-4 flex justify-center items-center">
-      <div ref={ref} className="w-full flex flex-col gap-2 items-center">
-        <div className="flex flex-row justify-center items-center">
-          <button onClick={() => handlePastImage(imageIndex)}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
-              />
-            </svg>
-          </button>
-          <Image
-            className="w-full"
-            width={movieImages?.backdrops[imageIndex]?.width}
-            height={movieImages?.backdrops[imageIndex]?.height}
-            alt={movieImages?.backdrops[imageIndex]?.file_path || ""}
-            src={`https://image.tmdb.org/t/p/w400${
-              movieImages?.backdrops?.slice(0, 6)[imageIndex]?.file_path
-            }`}
-          />
-          <button onClick={() => handlePreviousImage(imageIndex)}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
-              />
-            </svg>
-          </button>
-        </div>
-        <ul className="flex flex-row gap-2">
-          {emptyArray?.map((el, index) => (
-            <button
-              key={index}
-              className={`p-1  rounded-full ${
-                index === imageIndex
-                  ? "bg-movieGreyishBlue"
-                  : "bg-movieGreyishBlue/35"
-              }`}
-              onClick={() => setImageIndex(index)}
-            ></button>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
+  return mounted
+    ? createPortal(
+        <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-4 lg:px-8">
+          <div ref={ref} className="w-full flex flex-col gap-2 items-center">
+            <div className="flex flex-row justify-center items-center">
+              <button onClick={() => handlePastImage(imageIndex)}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
+                  />
+                </svg>
+              </button>
+              {pathname.includes("/movie") && (
+                <Image
+                  className="w-full h-full"
+                  width={movieImages?.backdrops[imageIndex]?.width || 200}
+                  height={movieImages?.backdrops[imageIndex]?.height || 150}
+                  alt={movieImages?.backdrops[imageIndex]?.file_path || ""}
+                  src={`https://image.tmdb.org/t/p/w400${
+                    movieImages?.backdrops?.slice(0, 6)[imageIndex]?.file_path
+                  }`}
+                />
+              )}
+
+              {pathname.includes("/tvshow") && (
+                <Image
+                  className="w-full h-full"
+                  width={tvShowImages?.backdrops[imageIndex]?.width || 200}
+                  height={tvShowImages?.backdrops[imageIndex]?.height || 150}
+                  alt={tvShowImages?.backdrops[imageIndex]?.file_path || ""}
+                  src={`https://image.tmdb.org/t/p/w400${
+                    tvShowImages?.backdrops?.slice(0, 6)[imageIndex]?.file_path
+                  }`}
+                />
+              )}
+
+              <button onClick={() => handlePreviousImage(imageIndex)}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
+                  />
+                </svg>
+              </button>
+            </div>
+            <ul className="flex flex-row gap-2">
+              {emptyArray?.map((el, index) => (
+                <button
+                  key={index}
+                  className={`p-1  rounded-full ${
+                    index === imageIndex
+                      ? "bg-movieGreyishBlue"
+                      : "bg-movieGreyishBlue/35"
+                  }`}
+                  onClick={() => setImageIndex(index)}
+                ></button>
+              ))}
+            </ul>
+          </div>
+        </div>,
+        document.body
+      )
+    : null;
 }

@@ -45,20 +45,13 @@ export type TVData = {
 } & GeneralTypes;
 
 export type TVShowData = {
+  adult: string;
   episode_run_time: number[];
   first_air_date: string;
   genres: GenreData[];
   homepage: string;
-  // last_episode_to_air: {
-  //   id: number;
-  //   name: string;
-  //   overview: string;
-  //   still_path: string;
-  //   season_number: number;
-  //   episode_number: number;
-  // };
+  id: number;
   name: string;
-  // origin_country: string[];
   overview: string;
   popularity: number;
   poster_path: string;
@@ -105,6 +98,10 @@ export type MovieImages = {
     width: number;
   }[];
 };
+
+export type TVShowImages = {
+  poster_path: string;
+} & MovieImages;
 
 export type PopularMovies = Pick<
   MovieData,

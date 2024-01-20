@@ -9,6 +9,7 @@ import {
   TVData,
   TVShowData,
   MovieImages,
+  TVShowImages,
 } from "@/types";
 
 export const axiosFetch: AxiosInstance = axios.create({
@@ -44,6 +45,11 @@ const getMovie = async (id: string) => {
   return response.data;
 };
 
+const getMovieImages = async (id: number | undefined) => {
+  const response = await axiosFetch.get<MovieImages>(`/movie/${id}/images`);
+  return response.data;
+};
+
 const getTvShows = async () => {
   const response = await axiosFetch.get<{
     results: TVData[];
@@ -55,6 +61,11 @@ const getTvShows = async () => {
 
 const getTvShow = async (id: string) => {
   const response = await axiosFetch.get<TVShowData>(`/tv/${id}?language=en-US`);
+  return response.data;
+};
+
+const getTVShowImages = async (id: number | undefined) => {
+  const response = await axiosFetch.get<TVShowImages>(`/tv/${id}/images`);
   return response.data;
 };
 
@@ -79,11 +90,6 @@ const getNowPlayingMovies = async () => {
   return response.data?.results;
 };
 
-const getMovieImages = async (id: number | undefined) => {
-  const response = await axiosFetch.get<MovieImages>(`/movie/${id}/images`);
-  return response.data;
-};
-
 const multiSearch = async (query: string) => {
   const response = await axiosFetch.get<{ results: MultiSearchData[] }>(
     `search/multi?query=${query}&include_adult=true&language=en-US&page=1`
@@ -102,6 +108,7 @@ const api = {
   getUpcomingMovies,
   getNowPlayingMovies,
   getMovieImages,
+  getTVShowImages,
 };
 
 export default api;

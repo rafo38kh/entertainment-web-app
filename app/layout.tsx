@@ -7,7 +7,7 @@ import Search from "@/components/Search";
 import Providers from "@/components/Providers";
 import Navigation from "@/components/Navigation";
 
-const outfit = Outfit({ subsets: ["latin"], weight: ["300"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["300", "500", "700"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",

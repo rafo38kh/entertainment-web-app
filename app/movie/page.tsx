@@ -75,10 +75,7 @@ export default function page() {
                 <span>{movie.adult ? "18+" : "PG"}</span>
               </div>
 
-              <span
-                data-tooltip-target="tooltip-animation"
-                className=" text-white font-medium text-[15px] truncate"
-              >
+              <span className=" text-white font-medium text-[15px] truncate">
                 {movie?.title}
               </span>
             </Link>
