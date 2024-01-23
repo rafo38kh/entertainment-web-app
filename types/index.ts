@@ -99,6 +99,12 @@ export type MovieImages = {
   }[];
 };
 
+export type Languages = {
+  iso_639_1: string;
+  english_name: string;
+  name: string;
+}[];
+
 export type TVShowImages = {
   poster_path: string;
 } & MovieImages;
@@ -118,4 +124,12 @@ export type MultiSearchData = Pick<
   title?: string;
   release_date?: string;
   first_air_date?: string;
+};
+
+export type FilterOptions = {
+  adult: boolean;
+  language: string;
+  year: number;
+  genre: string;
+  page: number;
 };

@@ -62,7 +62,7 @@ export default function Modal({
     ? createPortal(
         <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-4 lg:px-8">
           <div ref={ref} className="w-full flex flex-col gap-2 items-center">
-            <div className="flex flex-row justify-center items-center">
+            <div className="flex flex-row justify-center items-center w-full">
               <button onClick={() => handlePastImage(imageIndex)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

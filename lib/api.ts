@@ -10,6 +10,7 @@ import {
   TVShowData,
   MovieImages,
   TVShowImages,
+  Languages,
 } from "@/types";
 
 export const axiosFetch: AxiosInstance = axios.create({
@@ -90,11 +91,44 @@ const getNowPlayingMovies = async () => {
   return response.data?.results;
 };
 
+const getMovieGeneres = async () => {
+  const response = await axiosFetch.get<GenresData>(
+    "/genre/movie/list?language=en"
+  );
+  return response.data?.genres || [];
+};
+
+const getMovieLanguages = async () => {
+  const response = await axiosFetch.get<Languages[]>(
+    `/configuration/languages`
+  );
+  return response?.data || [];
+};
+
 const multiSearch = async (query: string) => {
   const response = await axiosFetch.get<{ results: MultiSearchData[] }>(
     `search/multi?query=${query}&include_adult=true&language=en-US&page=1`
   );
   return response.data?.results;
+};
+
+const getFilteredMovies = async ({
+  page = 1,
+  year = 2024,
+  adult = false,
+  genre = "action",
+  language = "en-US",
+}) => {
+  try {
+    const queryString = `discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&primary_release_year=${year}&sort_by=popularity.desc&with_genres=${genre}`;
+
+    const response = await axiosFetch.get<MoviesData>(queryString);
+
+    return response?.data?.results || [];
+  } catch (error) {
+    console.error("Error fetching filtered movies:", error);
+    throw error;
+  }
 };
 
 const api = {
@@ -109,6 +143,9 @@ const api = {
   getNowPlayingMovies,
   getMovieImages,
   getTVShowImages,
+  getFilteredMovies,
+  getMovieGeneres,
+  getMovieLanguages,
 };
 
 export default api;
