@@ -11,11 +11,20 @@ import {
   MovieImages,
   TVShowImages,
   Languages,
+  TVShowsData,
 } from "@/types";
 
 export const axiosFetch: AxiosInstance = axios.create({
   baseURL: "https://api.themoviedb.org/3",
 });
+
+type Filters = {
+  page: number;
+  year: number | null;
+  adult: boolean;
+  genre: string | null;
+  language: string;
+};
 
 axiosFetch.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   config.headers[
@@ -113,20 +122,45 @@ const multiSearch = async (query: string) => {
 };
 
 const getFilteredMovies = async ({
-  page = 1,
-  year = 2024,
-  adult = false,
-  genre = "action",
-  language = "en-US",
-}) => {
+  page,
+  year,
+  adult,
+  genre,
+  language,
+}: Filters) => {
   try {
-    const queryString = `discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&primary_release_year=${year}&sort_by=popularity.desc&with_genres=${genre}`;
+    const queryString =
+      year != null || genre != null
+        ? `discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&primary_release_year=${year}&sort_by=popularity.desc&with_genres=${genre}`
+        : `/discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&sort_by=popularity.desc`;
 
     const response = await axiosFetch.get<MoviesData>(queryString);
 
-    return response?.data?.results || [];
+    return response?.data;
   } catch (error) {
     console.error("Error fetching filtered movies:", error);
+    throw error;
+  }
+};
+
+const getFilteredShows = async ({
+  page,
+  year,
+  adult,
+  genre,
+  language,
+}: Filters) => {
+  try {
+    const queryString =
+      year != null || genre != null
+        ? `discover/tv?first_air_date_year=${year}&include_adult=${adult}&include_null_first_air_dates=false&language=${language}&page=${page}&sort_by=popularity.desc&without_genres=${genre}`
+        : `/discover/tv?include_adult=${adult}&include_null_first_air_dates=false&language=${language}&page=${page}&sort_by=popularity.desc`;
+
+    const response = await axiosFetch.get<TVShowsData>(queryString);
+
+    return response?.data;
+  } catch (error) {
+    console.error("Error fetching filtered TVShows:", error);
     throw error;
   }
 };
@@ -146,6 +180,7 @@ const api = {
   getFilteredMovies,
   getMovieGeneres,
   getMovieLanguages,
+  getFilteredShows,
 };
 
 export default api;

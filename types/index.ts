@@ -25,6 +25,8 @@ export type GeneralTypes = {
 export type MoviesData = {
   id: number;
   results: MovieData[];
+  total_pages: number;
+  total_results: number;
 };
 
 export type MovieData = {
@@ -38,10 +40,19 @@ export type MovieData = {
   genre_ids: number[];
 } & GeneralTypes;
 
+export type TVShowsData = {
+  page: number;
+  total_pages: number;
+  results: TVShowData[];
+  total_results: number;
+};
+
 export type TVData = {
   name: string;
   genre_ids: number[];
   original_name: string;
+  total_pages: number;
+  total_results: number;
 } & GeneralTypes;
 
 export type TVShowData = {
@@ -55,6 +66,7 @@ export type TVShowData = {
   overview: string;
   popularity: number;
   poster_path: string;
+  original_language: string;
   production_companies: {
     id: number;
     logo_path: string;
@@ -120,6 +132,7 @@ export type MultiSearchData = Pick<
 > & {
   media_type: "tv" | "movie";
   original_name: string;
+  original_language: string;
   name?: string;
   title?: string;
   release_date?: string;
@@ -129,7 +142,7 @@ export type MultiSearchData = Pick<
 export type FilterOptions = {
   adult: boolean;
   language: string;
-  year: number;
-  genre: string;
+  year: number | null;
+  genre: string | null;
   page: number;
 };

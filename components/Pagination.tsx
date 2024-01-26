@@ -1,7 +1,7 @@
 import { DOTS, usePagination } from "@/hooks/usePagination";
 
-type PaginationProps = {
-  totalCount: number;
+export type PaginationProps = {
+  totalCount: number | undefined;
   siblingCount: number;
   currentPage: number;
   pageSize: number;
@@ -17,14 +17,15 @@ const Pagination = (props: PaginationProps) => {
     pageSize,
   } = props;
 
-  const paginationRange = usePagination({
-    currentPage,
-    totalCount,
-    siblingCount,
-    pageSize,
-  });
+  const paginationRange =
+    totalCount &&
+    usePagination({
+      currentPage,
+      totalCount,
+      siblingCount,
+      pageSize,
+    });
 
-  // If there are less than 2 times in pagination range we shall not render the component
   if (paginationRange && (currentPage === 0 || paginationRange.length < 2)) {
     return null;
   }
@@ -39,9 +40,24 @@ const Pagination = (props: PaginationProps) => {
 
   let lastPage = paginationRange && paginationRange[paginationRange.length - 1];
   return (
-    <ul className="flex flex-row gap-2">
-      <li onClick={onPrevious}>
-        <span>Prev</span>
+    <ul className="flex flex-row gap-4 justify-center">
+      <li>
+        <button className="cursor-pointer" type="button" onClick={onPrevious}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
+            />
+          </svg>
+        </button>
       </li>
       {paginationRange &&
         paginationRange.map((pageNumber) => {
@@ -51,7 +67,7 @@ const Pagination = (props: PaginationProps) => {
 
           return (
             <li
-              className={` ${
+              className={`cursor-pointer ${
                 currentPage === pageNumber ? "text-red-500" : "text-white "
               }`}
               onClick={() => onPageChange(pageNumber)}
@@ -61,8 +77,23 @@ const Pagination = (props: PaginationProps) => {
           );
         })}
 
-      <li onClick={onNext}>
-        <span>Next</span>
+      <li>
+        <button className="cursor-pointer" type="button" onClick={onNext}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
+            />
+          </svg>
+        </button>
       </li>
     </ul>
   );

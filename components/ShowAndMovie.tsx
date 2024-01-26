@@ -77,7 +77,7 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
   return (
     <>
       <div className="relative">
-        {data && "backdrop_path" in data ? (
+        {data && "backdrop_path" in data && data?.backdrop_path ? (
           <Image
             className="w-full mb-6"
             width={100}
@@ -85,14 +85,26 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
             alt={data?.backdrop_path || ""}
             src={`https://image.tmdb.org/t/p/w400${data?.backdrop_path}`}
           />
-        ) : (
+        ) : data && "poster_path" in data && data?.poster_path ? (
           <Image
-            className="w-full mb-6"
             width={100}
             height={100}
+            className="w-full mb-6"
             alt={data?.poster_path || ""}
             src={`https://image.tmdb.org/t/p/w400${data?.poster_path}`}
           />
+        ) : (
+          <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded py-10 dark:bg-gray-700">
+            <svg
+              className="w-1/2 h-full text-gray-200 dark:text-gray-600"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 18"
+            >
+              <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+            </svg>
+          </div>
         )}
 
         <div className="px-4 flex flex-col gap-4">
@@ -196,24 +208,17 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
                           src={`https://image.tmdb.org/t/p/w400${seson?.poster_path}`}
                         />
                       ) : (
-                        <svg
-                          className="w-full h-full"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 48 48"
-                          width="96px"
-                          height="96px"
-                        >
-                          <path
-                            fill="#90CAF9"
-                            d="M40 45L8 45 8 3 30 3 40 13z"
-                          />
-                          <path fill="#E1F5FE" d="M38.5 14L29 14 29 4.5z" />
-                          <path fill="#1565C0" d="M21 23L14 33 28 33z" />
-                          <path
-                            fill="#1976D2"
-                            d="M28 26.4L23 33 33 33zM31.5 23A1.5 1.5 0 1 0 31.5 26 1.5 1.5 0 1 0 31.5 23z"
-                          />
-                        </svg>
+                        <div className="flex items-center justify-center w-full h-60 bg-gray-300 rounded dark:bg-gray-700">
+                          <svg
+                            className="w-1/2 h-full text-gray-200 dark:text-gray-600"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 20 18"
+                          >
+                            <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                          </svg>
+                        </div>
                       )}
 
                       <div className="flex flex-col ">
@@ -228,28 +233,30 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
               </ul>
             </>
           )}
-          <div className="flex flex-col gap-4">
-            <span className="w-full h-[1px] bg-slate-400"></span>
-            <span>Gallery</span>
-            <ul className="grid grid-cols-2 gap-2">
-              {images?.backdrops?.slice(0, 6)?.map((backdrop, index) => (
-                <li key={backdrop?.file_path}>
-                  <button
-                    aria-label={backdrop.file_path}
-                    onClick={() => handleOpenImage(index)}
-                  >
-                    <Image
-                      className="w-full"
-                      width={backdrop?.width}
-                      height={backdrop?.height}
-                      alt={backdrop?.file_path || ""}
-                      src={`https://image.tmdb.org/t/p/w400${backdrop?.file_path}`}
-                    />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {!!images?.backdrops.length && (
+            <div className="flex flex-col gap-4">
+              <span className="w-full h-[1px] bg-slate-400"></span>
+              <span>Gallery</span>
+              <ul className="grid grid-cols-2 gap-2">
+                {images?.backdrops?.slice(0, 6)?.map((backdrop, index) => (
+                  <li key={backdrop?.file_path}>
+                    <button
+                      aria-label={backdrop.file_path}
+                      onClick={() => handleOpenImage(index)}
+                    >
+                      <Image
+                        className="w-full"
+                        width={backdrop?.width}
+                        height={backdrop?.height}
+                        alt={backdrop?.file_path || ""}
+                        src={`https://image.tmdb.org/t/p/w400${backdrop?.file_path}`}
+                      />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
 
