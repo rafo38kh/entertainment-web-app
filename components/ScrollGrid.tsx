@@ -29,7 +29,7 @@ function ScrollGrid({ data, type }: Movie) {
                   el?.backdrop_path &&
                   `url(https://image.tmdb.org/t/p/w400${el.backdrop_path})`,
               }}
-              className="border flex flex-col justify-end bg-no-repeat bg-cover  relative rounded-lg overflow-hidden h-36 w-72"
+              className="flex flex-col justify-end bg-no-repeat bg-cover relative rounded-lg overflow-hidden h-36 w-72"
             >
               <button
                 className="absolute top-4 right-4 aspect-square rounded-full bg-black/35 flex items-center justify-center p-3"

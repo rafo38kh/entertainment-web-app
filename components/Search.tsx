@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
@@ -13,6 +14,7 @@ import useDebounce from "@/hooks/useDebounce";
 import { MultiSearchData } from "@/types";
 
 export default function Search() {
+  const router = useRouter();
   const pathname = usePathname();
   const [input, setInput] = useState("");
 
@@ -30,11 +32,16 @@ export default function Search() {
     setInput("");
   }, [pathname]);
 
+  const submitInputValue = () => {
+    router?.push(`/search/${input}`);
+  };
+
   return (
     <div>
       <form
-        className="flex flex-row justify-center items-center gap-2 p-4"
         action="#"
+        onSubmit={submitInputValue}
+        className="flex flex-row justify-center items-center gap-2 p-4"
       >
         <label htmlFor="">
           <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">

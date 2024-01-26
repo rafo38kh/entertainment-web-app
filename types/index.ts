@@ -25,6 +25,8 @@ export type GeneralTypes = {
 export type MoviesData = {
   id: number;
   results: MovieData[];
+  total_pages: number;
+  total_results: number;
 };
 
 export type MovieData = {
@@ -38,30 +40,33 @@ export type MovieData = {
   genre_ids: number[];
 } & GeneralTypes;
 
+export type TVShowsData = {
+  page: number;
+  total_pages: number;
+  results: TVShowData[];
+  total_results: number;
+};
+
 export type TVData = {
   name: string;
   genre_ids: number[];
   original_name: string;
+  total_pages: number;
+  total_results: number;
 } & GeneralTypes;
 
 export type TVShowData = {
+  adult: string;
   episode_run_time: number[];
   first_air_date: string;
   genres: GenreData[];
   homepage: string;
-  // last_episode_to_air: {
-  //   id: number;
-  //   name: string;
-  //   overview: string;
-  //   still_path: string;
-  //   season_number: number;
-  //   episode_number: number;
-  // };
+  id: number;
   name: string;
-  // origin_country: string[];
   overview: string;
   popularity: number;
   poster_path: string;
+  original_language: string;
   production_companies: {
     id: number;
     logo_path: string;
@@ -106,6 +111,16 @@ export type MovieImages = {
   }[];
 };
 
+export type Languages = {
+  iso_639_1: string;
+  english_name: string;
+  name: string;
+}[];
+
+export type TVShowImages = {
+  poster_path: string;
+} & MovieImages;
+
 export type PopularMovies = Pick<
   MovieData,
   "id" | "adult" | "backdrop_path" | "title" | "release_date"
@@ -117,8 +132,17 @@ export type MultiSearchData = Pick<
 > & {
   media_type: "tv" | "movie";
   original_name: string;
+  original_language: string;
   name?: string;
   title?: string;
   release_date?: string;
   first_air_date?: string;
+};
+
+export type FilterOptions = {
+  adult: boolean;
+  language: string;
+  year: number | null;
+  genre: string | null;
+  page: number;
 };

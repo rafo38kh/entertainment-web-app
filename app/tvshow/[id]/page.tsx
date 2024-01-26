@@ -1,9 +1,6 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
+import ShowAndMovie from "@/components/ShowAndMovie";
 
-import api from "@/lib/api";
-
-import { TVShowData } from "@/types";
 type Params = {
   params: {
     id: string;
@@ -11,15 +8,5 @@ type Params = {
 };
 
 export default function TvShowPage({ params }: Params) {
-  const {
-    data: tvData,
-    error: TVShowError,
-    isError: isTVShowError,
-    isLoading: isTVShowLoading,
-  } = useQuery<TVShowData>({
-    queryKey: ["show"],
-    queryFn: () => api.getTvShow(params?.id),
-  });
-
-  return <div>{tvData?.overview}</div>;
+  return <ShowAndMovie tvShowId={params.id} />;
 }
