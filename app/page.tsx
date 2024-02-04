@@ -7,29 +7,38 @@ import Auth from "@/components/Auth";
 import ScrollGrid from "@/components/ScrollGrid";
 
 import { GenresData, PopularMovies } from "@/types";
+import ScrollGridLoading from "@/components/ScrollGridLoading";
 
 export default function Home() {
   const {
     data: genresData,
     error: genresError,
-    isLoading: isGenresLoading,
     isError: isGenresError,
+    isLoading: isGenresLoading,
   } = useQuery<GenresData>({
     queryKey: ["genres"],
     queryFn: api.getGenres,
   });
 
-  const { data: upcomingMoviesData } = useQuery<PopularMovies[]>({
+  const {
+    data: upcomingMoviesData,
+    error: upcomingMoviesError,
+    isError: isUpcomingMoviesError,
+    isLoading: isUpcomingMoviesLoading,
+  } = useQuery<PopularMovies[]>({
     queryKey: ["upcomingMovies"],
     queryFn: api.getUpcomingMovies,
   });
 
-  const { data: nowPlayingMoviesData } = useQuery<PopularMovies[]>({
+  const {
+    data: nowPlayingMoviesData,
+    error: nowPlayingMoviesError,
+    isError: isNowPlayingMoviesError,
+    isLoading: isNowPlayingMoviesLoading,
+  } = useQuery<PopularMovies[]>({
     queryKey: ["nowPlayingMovies"],
     queryFn: api.getNowPlayingMovies,
   });
-
-  if (isGenresLoading) return <div>Loading...</div>;
 
   if (isGenresError) return <span>{genresError.message}</span>;
 
@@ -37,12 +46,20 @@ export default function Home() {
     <div className="flex flex-col gap-8">
       <div className="pl-4">
         <span className="text-2xl">Upcoming</span>
-        <ScrollGrid type="movie" data={upcomingMoviesData ?? []} />
+        {isUpcomingMoviesLoading ? (
+          <ScrollGridLoading />
+        ) : (
+          <ScrollGrid type="movie" data={upcomingMoviesData ?? []} />
+        )}
       </div>
 
       <div className="pl-4">
         <span className="text-2xl">Now Playing</span>
-        <ScrollGrid type="movie" data={nowPlayingMoviesData ?? []} />
+        {isNowPlayingMoviesLoading ? (
+          <ScrollGridLoading />
+        ) : (
+          <ScrollGrid type="movie" data={nowPlayingMoviesData ?? []} />
+        )}
       </div>
 
       <Auth />

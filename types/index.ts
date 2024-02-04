@@ -50,9 +50,10 @@ export type TVShowsData = {
 export type TVData = {
   name: string;
   genre_ids: number[];
-  original_name: string;
   total_pages: number;
   total_results: number;
+  original_name: string;
+  first_air_date: string;
 } & GeneralTypes;
 
 export type TVShowData = {

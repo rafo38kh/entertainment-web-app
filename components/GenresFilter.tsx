@@ -3,9 +3,11 @@
 import { Dispatch, SetStateAction } from "react";
 
 import { GenreData, FilterOptions } from "@/types";
+import { emptyArray } from "@/lib/getEmptyArray";
 
 type GenresFilterProps = {
   isFilterOpen: boolean;
+  isGenresLoading: boolean;
   genresData: GenreData[] | undefined;
   setIsFilterOpen: Dispatch<SetStateAction<boolean>>;
   setFilterOptions: Dispatch<SetStateAction<FilterOptions>>;
@@ -15,6 +17,7 @@ export default function GenresFilter({
   genresData,
   isFilterOpen,
   setIsFilterOpen,
+  isGenresLoading,
   setFilterOptions,
 }: GenresFilterProps) {
   const handleChangeToAdult = () => {
@@ -24,11 +27,30 @@ export default function GenresFilter({
     }));
   };
 
+  if (isGenresLoading)
+    return (
+      <div className="px-4">
+        <div className="flex flex-row gap-2 overflow-auto flex-wrap">
+          {emptyArray(20)?.map((genre) => (
+            <span
+              key={genre}
+              className="bg-white/90 text-semiDarkBlue font-light px-2 whitespace-nowrap rounded-md"
+            >
+              {null}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+
   return (
     <>
       <div className="flex flex-row justify-between px-4">
         <span>filters</span>
-        <button onClick={() => setIsFilterOpen((prevState) => !prevState)}>
+        <button
+          disabled={isGenresLoading}
+          onClick={() => setIsFilterOpen((prevState) => !prevState)}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

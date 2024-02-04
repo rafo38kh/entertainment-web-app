@@ -33,7 +33,7 @@ export default function Modal({
   movieImages,
   tvShowImages,
 }: ModalProps) {
-  const emptyArray = Array.from({ length: 6 }, () => Math.random());
+  const emptyArray = Array.from({ length: maxLegnth }, () => Math.random());
   const [mounted, setMounted] = useState(false);
 
   const pathname = usePathname();
@@ -121,7 +121,7 @@ export default function Modal({
               </button>
             </div>
             <ul className="flex flex-row gap-2">
-              {emptyArray?.map((el, index) => (
+              {emptyArray?.map((_, index) => (
                 <button
                   key={index}
                   className={`p-1  rounded-full ${
@@ -130,7 +130,7 @@ export default function Modal({
                       : "bg-movieGreyishBlue/35"
                   }`}
                   onClick={() => setImageIndex(index)}
-                ></button>
+                />
               ))}
             </ul>
           </div>

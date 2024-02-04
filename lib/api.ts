@@ -100,6 +100,13 @@ const getNowPlayingMovies = async () => {
   return response.data?.results;
 };
 
+const getOnTheAir = async () => {
+  const response = await axiosFetch.get<{ results: TVData[] }>(
+    "tv/on_the_air?language=en-US&page=1"
+  );
+  return response.data?.results || [];
+};
+
 const getMovieGeneres = async () => {
   const response = await axiosFetch.get<GenresData>(
     "/genre/movie/list?language=en"
@@ -181,6 +188,7 @@ const api = {
   getMovieGeneres,
   getMovieLanguages,
   getFilteredShows,
+  getOnTheAir,
 };
 
 export default api;
