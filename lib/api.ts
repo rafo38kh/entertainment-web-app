@@ -100,6 +100,13 @@ const getNowPlayingMovies = async () => {
   return response.data?.results;
 };
 
+const getOnTheAir = async () => {
+  const response = await axiosFetch.get<{ results: TVData[] }>(
+    "tv/on_the_air?language=en-US&page=1"
+  );
+  return response.data?.results || [];
+};
+
 const getMovieGeneres = async () => {
   const response = await axiosFetch.get<GenresData>(
     "/genre/movie/list?language=en"
@@ -130,9 +137,9 @@ const getFilteredMovies = async ({
 }: Filters) => {
   try {
     const queryString =
-      year != null || genre != null
+      genre != null
         ? `discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&primary_release_year=${year}&sort_by=popularity.desc&with_genres=${genre}`
-        : `/discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&sort_by=popularity.desc`;
+        : `/discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&sort_by=popularity.desc&year=${year}`;
 
     const response = await axiosFetch.get<MoviesData>(queryString);
 
@@ -152,9 +159,9 @@ const getFilteredShows = async ({
 }: Filters) => {
   try {
     const queryString =
-      year != null || genre != null
+      genre != null
         ? `discover/tv?first_air_date_year=${year}&include_adult=${adult}&include_null_first_air_dates=false&language=${language}&page=${page}&sort_by=popularity.desc&without_genres=${genre}`
-        : `/discover/tv?include_adult=${adult}&include_null_first_air_dates=false&language=${language}&page=${page}&sort_by=popularity.desc`;
+        : `/discover/tv?include_adult=${adult}&include_null_first_air_dates=false&language=${language}&page=${page}&sort_by=popularity.desc&year=${year}`;
 
     const response = await axiosFetch.get<TVShowsData>(queryString);
 
@@ -181,6 +188,7 @@ const api = {
   getMovieGeneres,
   getMovieLanguages,
   getFilteredShows,
+  getOnTheAir,
 };
 
 export default api;

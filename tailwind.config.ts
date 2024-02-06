@@ -19,6 +19,10 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      animation: {
+        "pulse-slow-3": "pulse 3s linear infinite",
+        "pulse-slow-5": "pulse 5s linear infinite",
+      },
     },
   },
   plugins: [],

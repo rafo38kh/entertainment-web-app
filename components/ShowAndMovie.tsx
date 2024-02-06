@@ -18,7 +18,6 @@ type TVMoiveProps = {
 
 export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
   const MAX_LENGTH = 5;
-
   const [imageIndex, setImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
