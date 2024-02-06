@@ -8,7 +8,7 @@ import api from "@/lib/api";
 
 import ScrollGrid from "@/components/ScrollGrid";
 import CardLoading from "@/components/CardLoading";
-import GenresFilterLoading from "@/components/GenresFilterLoading";
+
 import ScrollGridLoading from "@/components/ScrollGridLoading";
 
 import { useBookmarks } from "@/hooks/useBookmarks";
@@ -38,16 +38,6 @@ export default function TvShowsPage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const {
-    data: genresData,
-    error: genresError,
-    isError: isGenresError,
-    isLoading: isGenresLoading,
-  } = useQuery<GenreData[]>({
-    queryKey: ["genres"],
-    queryFn: api.getMovieGeneres,
-  });
-
-  const {
     data: tvShowData,
     error: tvShowError,
     isError: isTvShowError,
@@ -67,8 +57,6 @@ export default function TvShowsPage() {
     queryFn: api.getOnTheAir,
   });
 
-  console.log(onTheAirData, "onTheAirData");
-
   useEffect(() => {
     setFilterOptions((prevState) => ({
       ...prevState,
@@ -78,25 +66,21 @@ export default function TvShowsPage() {
 
   return (
     <>
-      {isGenresLoading ? (
-        <GenresFilterLoading />
-      ) : (
-        <GenresFilter
-          genresData={genresData}
-          isFilterOpen={isFilterOpen}
-          isGenresLoading={isGenresError}
-          setIsFilterOpen={setIsFilterOpen}
-          setFilterOptions={setFilterOptions}
-        />
-      )}
+      <GenresFilter
+        isFilterOpen={isFilterOpen}
+        filterOptions={filterOptions}
+        setIsFilterOpen={setIsFilterOpen}
+        setFilterOptions={setFilterOptions}
+      />
       <div className="pl-4 my-4">
         <span className="text-2xl">On The Air</span>
-        {isOnTheAirDataLoading ? (
-          <ScrollGridLoading />
-        ) : (
-          <ScrollGrid type="tv" data={onTheAirData ?? []} />
-        )}
+        <ScrollGrid
+          type="tv"
+          data={onTheAirData ?? []}
+          isLoading={isOnTheAirDataLoading}
+        />
       </div>
+
       {isTvShowLoading ? (
         <CardLoading />
       ) : (
@@ -156,7 +140,7 @@ export default function TvShowsPage() {
               <Link href={`/tvshow/${show?.id}`} className="flex flex-col">
                 <span className="truncate">{show?.name}</span>
                 <span>{show?.original_language}</span>
-                <span>{show?.adult && "18+"}</span>
+                <span>{show?.adult ? "18+" : null}</span>
               </Link>
             </li>
           ))}

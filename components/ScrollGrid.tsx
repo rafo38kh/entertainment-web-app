@@ -2,16 +2,22 @@ import Link from "next/link";
 
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+
+import ScrollGridLoading from "./ScrollGridLoading";
+
 import { MovieData, PopularMovies, TVData } from "@/types";
 
 type ScrollGridProps = {
+  isLoading: boolean;
   type: "movie" | "tv";
   data: (MovieData | TVData | PopularMovies)[];
 };
 
-function ScrollGrid({ data, type }: ScrollGridProps) {
+function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
   const { addBookmarks } = useBookmarks();
   const parsedUser = useGetUsersInfo();
+
+  if (isLoading) return <ScrollGridLoading />;
 
   return (
     <ul className="flex gap-4 overflow-x-scroll no-scrollbar mt-4">

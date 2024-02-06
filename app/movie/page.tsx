@@ -9,7 +9,6 @@ import api from "@/lib/api";
 import ScrollGrid from "@/components/ScrollGrid";
 import Pagination from "@/components/Pagination";
 import GenresFilter from "@/components/GenresFilter";
-import GenresFilterLoading from "@/components/GenresFilterLoading";
 import ScrollGridLoading from "@/components/ScrollGridLoading";
 import CardLoading from "@/components/CardLoading";
 
@@ -42,17 +41,6 @@ export default function page() {
     useState<FilterOptions>(initialFilterOptions);
 
   const {
-    data: genresData,
-    error: genresError,
-    isError: isGenresError,
-    isLoading: isGenresLoading,
-  } = useQuery<GenreData[]>({
-    queryKey: ["genres"],
-    queryFn: api.getMovieGeneres,
-    enabled: isFilterOpen,
-  });
-
-  const {
     data: moveiesData,
     error: moviesError,
     isError: isMoviesError,
@@ -72,11 +60,6 @@ export default function page() {
     queryFn: api.getPopularMovies,
   });
 
-  // const { data: movieLanguages } = useQuery<Languages[]>({
-  //   queryKey: ["languages"],
-  //   queryFn: api.getMovieLanguages,
-  // });
-
   useEffect(() => {
     setFilterOptions((prevState) => ({
       ...prevState,
@@ -86,24 +69,20 @@ export default function page() {
 
   return (
     <div>
-      {isGenresLoading ? (
-        <GenresFilterLoading />
-      ) : (
-        <GenresFilter
-          genresData={genresData}
-          isFilterOpen={isFilterOpen}
-          isGenresLoading={isGenresError}
-          setIsFilterOpen={setIsFilterOpen}
-          setFilterOptions={setFilterOptions}
-        />
-      )}
+      <GenresFilter
+        isFilterOpen={isFilterOpen}
+        filterOptions={filterOptions}
+        setIsFilterOpen={setIsFilterOpen}
+        setFilterOptions={setFilterOptions}
+      />
       <div className="pl-4 my-4">
         <span className="text-2xl">Popular Movies</span>
-        {isPopularMoveiesLoading ? (
-          <ScrollGridLoading />
-        ) : (
-          <ScrollGrid type="movie" data={popularMoveiesData ?? []} />
-        )}
+
+        <ScrollGrid
+          type="movie"
+          data={popularMoveiesData ?? []}
+          isLoading={isPopularMoveiesLoading}
+        />
       </div>
 
       {isMoviesLoading ? (
@@ -169,7 +148,7 @@ export default function page() {
                   <span>
                     {movie?.original_language && movie?.original_language}
                   </span>
-                  <span>{movie?.adult && "18+"}</span>
+                  <span>{movie?.adult ? "18+" : null}</span>
                 </div>
 
                 <span className=" text-white font-medium text-[15px] truncate">

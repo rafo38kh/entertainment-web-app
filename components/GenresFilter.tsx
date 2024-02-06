@@ -1,23 +1,22 @@
-"use client";
-
 import { Dispatch, SetStateAction } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+import api from "@/lib/api";
+import { emptyArray } from "@/lib/getEmptyArray";
 
 import { GenreData, FilterOptions } from "@/types";
-import { emptyArray } from "@/lib/getEmptyArray";
 
 type GenresFilterProps = {
   isFilterOpen: boolean;
-  isGenresLoading: boolean;
-  genresData: GenreData[] | undefined;
+  filterOptions: FilterOptions;
   setIsFilterOpen: Dispatch<SetStateAction<boolean>>;
   setFilterOptions: Dispatch<SetStateAction<FilterOptions>>;
 };
 
 export default function GenresFilter({
-  genresData,
   isFilterOpen,
+  filterOptions,
   setIsFilterOpen,
-  isGenresLoading,
   setFilterOptions,
 }: GenresFilterProps) {
   const handleChangeToAdult = () => {
@@ -26,6 +25,18 @@ export default function GenresFilter({
       adult: !prevState?.adult,
     }));
   };
+
+  const {
+    data: genresData,
+    error: genresError,
+    isError: isGenresError,
+    isLoading: isGenresLoading,
+  } = useQuery<GenreData[]>({
+    queryKey: ["genres"],
+    queryFn: api.getMovieGeneres,
+  });
+
+  if (isGenresError) return <span>{genresError.message}</span>;
 
   if (isGenresLoading)
     return (
@@ -45,50 +56,66 @@ export default function GenresFilter({
 
   return (
     <>
-      <div className="flex flex-row justify-between px-4">
-        <span>filters</span>
-        <button
-          disabled={isGenresLoading}
-          onClick={() => setIsFilterOpen((prevState) => !prevState)}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-6 h-6"
+      <div className="flex items-center justify-between px-4">
+        <span>Filters</span>
+        <div className="flex items-center justify-center gap-4">
+          <label
+            htmlFor="adult"
+            className={`text-semiDarkBlue inline-block font-light hover:cursor-pointer px-2 whitespace-nowrap rounded-md ${
+              filterOptions?.adult ? "bg-white/90" : "bg-white/50"
+            }`}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5"
+            <input
+              id="adult"
+              name="adult"
+              type="checkbox"
+              className="hidden"
+              checked={filterOptions?.adult}
+              onChange={handleChangeToAdult}
             />
-          </svg>
-        </button>
+            18+
+          </label>
+          <button
+            disabled={isGenresLoading}
+            onClick={() => setIsFilterOpen((prevState) => !prevState)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-6 h-6 rotate-90"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 13.5V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 0 1 0 3m0-3a1.5 1.5 0 0 0 0 3m0 9.75V10.5"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {isFilterOpen && (
-        <div className="px-4">
-          <div className="flex flex-row gap-2 overflow-auto flex-wrap">
+        <div className="p-4">
+          <ul className="flex flex-row gap-2 overflow-auto flex-wrap">
             {genresData?.map((genre) => (
-              <button
-                key={genre.id}
-                onClick={() =>
-                  setFilterOptions((prevState) => ({
-                    ...prevState,
-                    genre: genre?.id?.toString(),
-                  }))
-                }
-                className="bg-white/90 text-semiDarkBlue font-light px-2 whitespace-nowrap rounded-md"
-              >
-                {genre.name}
-              </button>
+              <li key={genre?.id}>
+                <button
+                  onClick={() =>
+                    setFilterOptions((prevState) => ({
+                      ...prevState,
+                      genre: genre?.id?.toString(),
+                    }))
+                  }
+                  className="bg-white/90 text-semiDarkBlue font-light px-2 whitespace-nowrap rounded-md"
+                >
+                  {genre?.name}
+                </button>
+              </li>
             ))}
-          </div>
-          <button type="button" onClick={handleChangeToAdult}>
-            18+
-          </button>
+          </ul>
         </div>
       )}
     </>
