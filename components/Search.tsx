@@ -65,7 +65,10 @@ export default function Search() {
       {input && (
         <ul className="flex flex-col">
           {multiSearchData?.map((data) => (
-            <li className="border mb-2" key={data?.id}>
+            <li
+              className="border-b-[1px] border-movieGreyishBlue"
+              key={data?.id}
+            >
               <Link
                 href={
                   data?.media_type === "movie"
@@ -73,7 +76,7 @@ export default function Search() {
                     : `/tvshow/${data?.id}`
                 }
                 onClick={() => setInput("")}
-                className="flex flex-row gap-2"
+                className="flex flex-row gap-2 p-2"
               >
                 {data?.poster_path ? (
                   <Image
@@ -106,18 +109,38 @@ export default function Search() {
                     {data?.media_type === "movie" ? data?.title : data?.name}
                   </span>
                   <div className="flex flex-row gap-2">
-                    <span>{data?.adult && "18+"}</span>
-                    <span>{data?.media_type}</span>
                     <span>
                       {data?.media_type === "movie"
                         ? data?.release_date?.slice(0, 4)
                         : data?.first_air_date?.slice(0, 4)}
                     </span>
+                    <span>{data?.media_type}</span>
+                    <span>{data?.adult ? "18+" : null}</span>
                   </div>
                 </div>
               </Link>
             </li>
           ))}
+          <button
+            className="bg-movieGreyishBlue w-full p-2 flex flex-row justify-center items-center gap-1"
+            onClick={submitInputValue}
+          >
+            View all results
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="w-4 h-4"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m8.25 4.5 7.5 7.5-7.5 7.5"
+              />
+            </svg>
+          </button>
         </ul>
       )}
     </div>

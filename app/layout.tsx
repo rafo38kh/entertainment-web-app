@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 
+import BookmarkContextProvider from "@/contexts/BookmarksContextProvider";
+
 import Search from "@/components/Search";
 import Providers from "@/components/Providers";
 import Navigation from "@/components/Navigation";
@@ -25,7 +27,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <Providers>
           <Navigation />
           <Search />
-          {children}
+          <BookmarkContextProvider>{children}</BookmarkContextProvider>
         </Providers>
       </body>
     </html>

@@ -34,7 +34,7 @@ function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
               }}
               className="flex flex-col justify-end bg-no-repeat bg-cover relative rounded-lg overflow-hidden h-36 w-72"
             >
-              <button
+              {/* <button
                 className="absolute top-4 right-4 aspect-square rounded-full bg-black/35 flex items-center justify-center p-3"
                 type="button"
                 onClick={() => {
@@ -51,7 +51,7 @@ function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
                     fill="none"
                   />
                 </svg>
-              </button>
+              </button> */}
               <div className="p-4 pt-12 bg-gradient-to-t from-black to-transparent text-xs text-white/70">
                 <span className="w-full text-white font-medium text-[15px]">
                   {"title" in el ? el?.title : el?.name}

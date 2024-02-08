@@ -102,7 +102,7 @@ export default function Home() {
                   src={`https://image.tmdb.org/t/p/w400${movie?.poster_path}`}
                 />
               ) : (
-                <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
+                <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded  dark:bg-gray-700">
                   <svg
                     className="w-1/2 h-full text-gray-200 dark:text-gray-600"
                     aria-hidden="true"
@@ -136,7 +136,7 @@ export default function Home() {
 
             <Link
               href={`/movie/${movie?.id}`}
-              className="w-full h-full flex flex-col  gap-2"
+              className="w-full h-full flex flex-col"
             >
               <div className="flex flex-row gap-2 text-xs text-white/70">
                 <span>

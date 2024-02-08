@@ -5,6 +5,8 @@ import {
   onSnapshot,
   collection,
   QueryDocumentSnapshot,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
 
 import { db } from "../config/firebase";
@@ -49,5 +51,15 @@ export function useBookmarks() {
     }
   };
 
-  return { getBookmarks, addBookmarks };
+  const removeBookmarks = async (docID: string) => {
+    try {
+      const docRef = doc(db, "bookmarks", docID);
+
+      await deleteDoc(docRef);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return { getBookmarks, addBookmarks, removeBookmarks };
 }
