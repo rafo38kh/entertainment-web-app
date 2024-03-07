@@ -83,7 +83,7 @@ export default function TvShowsPage() {
       {isTvShowLoading ? (
         <CardLoading />
       ) : (
-        <ul className="grid grid-cols-2 gap-4 p-4">
+        <ul className="grid grid-cols-2 md:grid-cols-4 max-w-[65rem] gap-4 p-4">
           {tvShowData?.results?.map((show) => {
             const currentBookmarkId = bookmarks?.find(
               (bookmark) => bookmark?.movieId === show?.id
@@ -91,19 +91,19 @@ export default function TvShowsPage() {
             return (
               <li
                 key={show?.id}
-                className="w-full h-full flex flex-col justify-between gap-2"
+                className=" flex flex-col justify-between w-[171px] h-[301px] md:w-[182px] md:h-[312px] lg:w-[220px] lg:h-[360px]"
               >
                 <div className="relative w-full h-full">
                   {show?.poster_path ? (
                     <Image
-                      className="w-full h-60 rounded-lg "
+                      className="w-full h-full rounded-lg "
                       width={100}
                       height={100}
                       alt={show?.poster_path || ""}
                       src={`https://image.tmdb.org/t/p/w400${show?.poster_path}`}
                     />
                   ) : (
-                    <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
+                    <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded dark:bg-gray-700">
                       <svg
                         className="w-1/2 h-full text-gray-200 dark:text-gray-600"
                         aria-hidden="true"

@@ -95,25 +95,28 @@ export default function page() {
       {isMoviesLoading ? (
         <CardLoading />
       ) : (
-        <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6  gap-4 p-4">
+        <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 p-4">
           {moveiesData?.results?.map((movie) => {
             const currentBookmarkId = bookmarks?.find(
               (bookmark) => bookmark?.movieId === movie?.id
             )?.docId as string;
 
             return (
-              <li className="flex flex-col items-start gap-2" key={movie?.id}>
+              <li
+                className="flex flex-col items-start justify-center w-[171px] h-[301px] md:w-[182px] md:h-[312px] lg:max-w-[220px] lg:h-[360px]"
+                key={movie?.id}
+              >
                 <div className="relative w-full">
                   {movie?.poster_path ? (
                     <Image
-                      className="w-full rounded-lg h-60"
+                      className="w-full rounded-lg h-full"
                       width={100}
                       height={100}
                       alt={movie?.backdrop_path || ""}
                       src={`https://image.tmdb.org/t/p/w400${movie?.poster_path}`}
                     />
                   ) : (
-                    <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
+                    <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded dark:bg-gray-700">
                       <svg
                         className="w-1/2 h-full text-gray-200 dark:text-gray-600"
                         aria-hidden="true"
@@ -168,7 +171,7 @@ export default function page() {
 
                 <Link
                   href={`/movie/${movie?.id}`}
-                  className="w-full h-full flex flex-col  gap-2"
+                  className="w-full h-full flex flex-col  "
                 >
                   <div className="flex flex-row gap-2 text-xs text-white/70">
                     <span>

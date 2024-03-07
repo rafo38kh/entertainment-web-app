@@ -2,15 +2,21 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { AuthContext } from "@/contexts/AuthContextProvider";
 
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+import { useContext, useState } from "react";
 
 export default function Navigation() {
   const parsedUser = useGetUsersInfo();
   const pathname = usePathname();
+  const { isAuth, setIsAuth, signInWithGoogle, logOut } =
+    useContext(AuthContext);
+
+  const [isSignOutShowing, setIsSignOutShowing] = useState(false);
 
   return (
-    <div className="w-full bg-semiDarkBlue p-4 flex flex-row items-center justify-between">
+    <div className="w-full bg-semiDarkBlue p-4 flex flex-row items-center justify-between  lg:w-20 lg:flex-col lg:h-[calc(100vh_-_2rem)]">
       <Link href="/">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +31,7 @@ export default function Navigation() {
           />
         </svg>
       </Link>
-      <div className="flex flex-row items-center justify-center gap-4">
+      <div className="flex flex-row items-center justify-center gap-4 lg:flex-col">
         <Link href="/">
           <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -63,16 +69,34 @@ export default function Navigation() {
         </Link>
       </div>
 
-      <div className="aspect-square rounded-full overflow-hidden w-9">
-        {parsedUser?.profilePhoto && (
-          <Image
-            height={100}
-            width={100}
-            alt="Picture of the author"
-            src={parsedUser?.profilePhoto}
-          />
+      <button
+        type="button"
+        onClick={() => setIsSignOutShowing((prevState) => !prevState)}
+        className="relative"
+      >
+        {isAuth && (
+          <div className="aspect-square rounded-full overflow-hidden w-9">
+            {parsedUser?.profilePhoto && (
+              <Image
+                height={100}
+                width={100}
+                alt="Picture of the author"
+                src={parsedUser?.profilePhoto}
+              />
+            )}
+          </div>
         )}
-      </div>
+
+        {isAuth && isSignOutShowing && (
+          <button
+            onClick={logOut}
+            className="bg-black p-4 whitespace-nowrap absolute top-10 right-0 rounded"
+          >
+            Sign out
+          </button>
+        )}
+      </button>
+      {!isAuth && <button onClick={signInWithGoogle}>Sign in</button>}
     </div>
   );
 }

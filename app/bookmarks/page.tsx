@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { BookmarkContext } from "@/contexts/BookmarksContextProvider";
 import Image from "next/image";
@@ -14,17 +14,20 @@ import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import { MovieBookmark } from "@/types";
 import { MoviesData, TVShowData } from "@/types";
 import CardLoading from "@/components/CardLoading";
+import { AuthContext } from "@/contexts/AuthContextProvider";
 
 export default function Bookmarks() {
   const parsedUser = useGetUsersInfo();
-  const { getBookmarks, removeBookmarks } = useBookmarks();
+  const { isAuth } = useContext(AuthContext);
   const { bookmarks, setBookmarks } = useContext(BookmarkContext);
 
+  const { getBookmarks, removeBookmarks } = useBookmarks();
+
   useEffect(() => {
-    if (parsedUser?.userID) {
+    if (isAuth && parsedUser?.userID) {
       getBookmarks(parsedUser?.userID, setBookmarks);
     }
-  }, []);
+  }, [isAuth]);
 
   const {
     data: moveiesData,
@@ -64,14 +67,14 @@ export default function Bookmarks() {
     enabled: bookmarks?.length > 0,
   });
 
-  return bookmarks.length > 0 ? (
+  return isAuth && bookmarks.length > 0 ? (
     <div className="px-4">
       <div>
         <span className="text-2xl">Movies</span>
         {isMoveiesLoading ? (
           <CardLoading />
         ) : (
-          <ul className="grid grid-cols-2 gap-4 mb-8">
+          <ul className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {moveiesData &&
               moveiesData?.length > 0 &&
               moveiesData?.map((movie) => {
@@ -82,7 +85,7 @@ export default function Bookmarks() {
                 return (
                   <li
                     key={movie?.id + 9}
-                    className="flex flex-col items-start gap-2"
+                    className="flex flex-col items-start w-[171px] h-[301px] md:w-[182px] md:h-[312px]"
                   >
                     <div className="relative w-full">
                       <Image
@@ -111,7 +114,7 @@ export default function Bookmarks() {
                     </div>
                     <Link
                       href={`/movie/${movie?.id}`}
-                      className="w-full h-full flex flex-col  gap-2"
+                      className="w-full h-full flex flex-col  "
                     >
                       <div className="flex flex-row gap-2 text-xs text-white/70">
                         <span>{movie?.release_date?.slice(0, 4)}</span>
@@ -134,7 +137,7 @@ export default function Bookmarks() {
         {isTvshowLoading ? (
           <CardLoading />
         ) : (
-          <ul className="grid grid-cols-2 gap-4">
+          <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {tvshowData &&
               tvshowData?.length > 0 &&
               tvshowData?.map((show) => {

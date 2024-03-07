@@ -1,9 +1,15 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "@/config/firebase";
 
-export default function Auth() {
+export default function Auth({
+  isSignOutShowing,
+  setIsSignOutShowing,
+}: {
+  isSignOutShowing: boolean;
+  setIsSignOutShowing: Dispatch<SetStateAction<boolean>>;
+}) {
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
@@ -39,6 +45,7 @@ export default function Auth() {
     try {
       await signOut(auth);
       setIsAuth(false);
+      setIsSignOutShowing(false);
 
       window?.localStorage?.removeItem("user");
     } catch (error) {
@@ -48,10 +55,15 @@ export default function Auth() {
 
   return (
     <div>
-      {!isAuth ? (
-        <button onClick={() => signInWithGoogle()}>Sign in with google</button>
-      ) : (
-        isAuth && <button onClick={() => logOut()}>Logout</button>
+      {!isAuth && <button onClick={signInWithGoogle}>Sign in</button>}
+
+      {isAuth && isSignOutShowing && (
+        <button
+          onClick={logOut}
+          className="bg-black p-4 whitespace-nowrap absolute top-10 right-0 rounded"
+        >
+          Sign out
+        </button>
       )}
     </div>
   );

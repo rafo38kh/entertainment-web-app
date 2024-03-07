@@ -21,7 +21,6 @@ type TVMoiveProps = {
 };
 
 export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
-  const MAX_LENGTH = 5;
   const [imageIndex, setImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { getBookmarks, addBookmarks, removeBookmarks } = useBookmarks();
@@ -79,7 +78,12 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
 
   const data = movieData ? movieData : tvData;
   const images = movieImages ? movieImages : tvShowImages;
+  const MAX_LENGTH =
+    images?.backdrops?.length && images?.backdrops?.length < 5
+      ? images?.backdrops?.length
+      : 6;
 
+  console.log("MAX_LENGTH", MAX_LENGTH);
   useEffect(() => {
     if (parsedUser?.userID) {
       getBookmarks(parsedUser?.userID, setBookmarks);
@@ -242,9 +246,12 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
           {data && "seasons" in data && (
             <>
               <span>Seasons</span>
-              <ul className="grid grid-cols-2 gap-4">
+              <ul className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {data?.seasons.map((seson) => (
-                  <li key={seson.id}>
+                  <li
+                    key={seson.id}
+                    className="w-[171px] h-[301px] md:w-[248px] md:h-[421px]"
+                  >
                     <Link
                       href={`/tvshow/${seson?.id}`}
                       className="flex flex-col gap-2 w-full h-full justify-between"
@@ -258,7 +265,7 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
                           src={`https://image.tmdb.org/t/p/w400${seson?.poster_path}`}
                         />
                       ) : (
-                        <div className="flex items-center justify-center w-full h-60 bg-gray-300 rounded dark:bg-gray-700">
+                        <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded-xl dark:bg-gray-700">
                           <svg
                             className="w-1/2 h-full text-gray-200 dark:text-gray-600"
                             aria-hidden="true"
@@ -287,15 +294,16 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
             <div className="flex flex-col gap-4">
               <span className="w-full h-[1px] bg-slate-400"></span>
               <span>Gallery</span>
-              <ul className="grid grid-cols-2 gap-2">
+              <ul className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {images?.backdrops?.slice(0, 6)?.map((backdrop, index) => (
                   <li key={backdrop?.file_path}>
                     <button
                       aria-label={backdrop.file_path}
                       onClick={() => handleOpenImage(index)}
+                      className="h-full w-full"
                     >
                       <Image
-                        className="w-full"
+                        className="w-full h-full"
                         width={backdrop?.width}
                         height={backdrop?.height}
                         alt={backdrop?.file_path || ""}

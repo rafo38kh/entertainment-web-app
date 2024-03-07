@@ -48,12 +48,12 @@ export default function Modal({
 
   const handlePastImage = (index: number) => {
     if (imageIndex === 0) {
-      setImageIndex(maxLegnth);
+      setImageIndex(maxLegnth - 1);
     } else setImageIndex(imageIndex - 1);
   };
 
   const handlePreviousImage = (index: number) => {
-    if (imageIndex === maxLegnth) {
+    if (imageIndex === maxLegnth - 1) {
       setImageIndex(0);
     } else setImageIndex(imageIndex + 1);
   };

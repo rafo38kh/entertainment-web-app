@@ -49,7 +49,7 @@ export default function SearchPage({ searchValue }: SearchPageProp) {
       <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6  gap-4 p-4">
         {multiSearchData?.map((movie) => (
           <li className="flex flex-col items-start " key={movie?.id}>
-            <div className="relative w-full">
+            <div className="relative w-full h-full">
               {/* <Image
                 priority
                 src={`https://image.tmdb.org/t/p/w400${movie?.poster_path}`}
@@ -106,7 +106,7 @@ export default function SearchPage({ searchValue }: SearchPageProp) {
 
             <Link
               href={`/movie/${movie?.id}`}
-              className="w-full h-full flex flex-col  gap-2"
+              className="w-full  flex flex-col  gap-2"
             >
               <div className="flex flex-row gap-2 text-xs text-white/70">
                 <span>
