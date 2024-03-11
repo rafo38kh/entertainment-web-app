@@ -10,7 +10,6 @@ import {
 } from "react";
 
 import { MovieBookmark } from "@/types";
-
 type BookmarkContext = {
   bookmarks: MovieBookmark[];
   setBookmarks: Dispatch<SetStateAction<MovieBookmark[]>>;

@@ -81,11 +81,11 @@ export default function Modal({
               </button>
               {pathname.includes("/movie") && (
                 <Image
-                  className="w-full h-full"
-                  width={movieImages?.backdrops[imageIndex]?.width || 200}
-                  height={movieImages?.backdrops[imageIndex]?.height || 150}
+                  className="w-full h-full rounded-lg"
+                  width={movieImages?.backdrops[imageIndex]?.width || 1000}
+                  height={movieImages?.backdrops[imageIndex]?.height || 1500}
                   alt={movieImages?.backdrops[imageIndex]?.file_path || ""}
-                  src={`https://image.tmdb.org/t/p/w400${
+                  src={`https://image.tmdb.org/t/p/original${
                     movieImages?.backdrops?.slice(0, 6)[imageIndex]?.file_path
                   }`}
                 />
@@ -93,11 +93,11 @@ export default function Modal({
 
               {pathname.includes("/tvshow") && (
                 <Image
-                  className="w-full h-full"
-                  width={tvShowImages?.backdrops[imageIndex]?.width || 200}
-                  height={tvShowImages?.backdrops[imageIndex]?.height || 150}
+                  className="w-full h-full rounded-lg"
+                  width={tvShowImages?.backdrops[imageIndex]?.width || 1000}
+                  height={tvShowImages?.backdrops[imageIndex]?.height || 1500}
                   alt={tvShowImages?.backdrops[imageIndex]?.file_path || ""}
-                  src={`https://image.tmdb.org/t/p/w400${
+                  src={`https://image.tmdb.org/t/p/original${
                     tvShowImages?.backdrops?.slice(0, 6)[imageIndex]?.file_path
                   }`}
                 />

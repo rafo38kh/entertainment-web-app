@@ -40,12 +40,13 @@ export function useBookmarks() {
   };
 
   const addBookmarks = async (
-    movieId: number,
+    movieId: string,
+    movie: string,
     userID: string,
     type: string
   ) => {
     try {
-      await addDoc(docCollectionRef, { movieId, userID, type });
+      await addDoc(docCollectionRef, { movieId, movie, userID, type });
     } catch (error) {
       console.log(error);
     }

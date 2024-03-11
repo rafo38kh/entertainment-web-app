@@ -16,7 +16,7 @@ export default function Navigation() {
   const [isSignOutShowing, setIsSignOutShowing] = useState(false);
 
   return (
-    <div className="w-full bg-semiDarkBlue p-4 flex flex-row items-center justify-between  lg:w-20 lg:flex-col lg:h-[calc(100vh_-_2rem)]">
+    <div className="w-full bg-semiDarkBlue p-4 flex flex-row items-center justify-between  lg:w-20 lg:flex-col lg:h-[calc(100vh_-_2rem)] lg:rounded-lg">
       <Link href="/">
         <svg
           xmlns="http://www.w3.org/2000/svg"

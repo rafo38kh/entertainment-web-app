@@ -1,8 +1,6 @@
 "use client";
-// import { useEffect, useState } from "react";
+
 import { DOTS, usePagination } from "@/hooks/usePagination";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 export type PaginationProps = {
   totalCount: number | undefined;
@@ -13,7 +11,6 @@ export type PaginationProps = {
 };
 
 const Pagination = (props: PaginationProps) => {
-  // const [isVisible, setIsVisible] = useState(false);
   const {
     onPageChange,
     totalCount,
@@ -43,28 +40,12 @@ const Pagination = (props: PaginationProps) => {
     onPageChange(currentPage - 1);
   };
 
-  // useEffect(() => {
-  //   const toggleVisibility = () => {
-  //     // if the user scrolls down, show the button
-  //     window.scrollY > 500 ? setIsVisible(true) : setIsVisible(false);
-  //   };
-  //   // listen for scroll events
-  //   window.addEventListener("scroll", toggleVisibility);
-
-  //   // clear the listener on component unmount
-  //   return () => {
-  //     window.removeEventListener("scroll", toggleVisibility);
-  //   };
-  // }, []);
-
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   };
-
-  // let lastPage = paginationRange && paginationRange[paginationRange.length - 1];
 
   return (
     <ul className="flex flex-row gap-4 justify-center">

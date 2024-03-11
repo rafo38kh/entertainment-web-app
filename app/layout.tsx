@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 
-import AuthContextProvider from "@/contexts/AuthContextProvider";
 import BookmarkContextProvider from "@/contexts/BookmarksContextProvider";
 
 import Search from "@/components/Search";
@@ -24,23 +23,6 @@ type RootLayoutProps = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
-      {/* <body>
-        <div className="grid min-h-screen grid-cols-[auto_1fr] justify-center gap-4 overflow-hidden p-4">
-          <Providers>
-            <div className="lg:hidden">
-              <Navigation />
-            </div>
-            <div className="hidden lg:flex h-[calc(100vh_-_2rem)] w-20 flex-col items-center justify-between bg-slate-500 py-6">
-              <Navigation />
-            </div>
-
-            <div className="h-[calc(100vh_-_2rem)] w-full overflow-y-scroll">
-              <Search />
-              <BookmarkContextProvider>{children}</BookmarkContextProvider>
-            </div>
-          </Providers>
-        </div>
-      </body> */}
       <body
         className={`lg:h-[calc(100vh_-_2rem)] lg:w-full lg:overflow-y-scroll lg:gap-4 lg:p-4 lg:justify-center lg:grid lg:grid-cols-[auto_1fr]  bg-movieDarkBlue text-white ${outfit.className}`}
       >

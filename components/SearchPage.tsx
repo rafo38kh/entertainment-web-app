@@ -15,16 +15,9 @@ type SearchPageProp = {
   searchValue: string;
 };
 
-const placeholderImageUrl = "/assets/thumbnails/large.js";
-
 export default function SearchPage({ searchValue }: SearchPageProp) {
   const { addBookmarks } = useBookmarks();
   const parsedUser = useGetUsersInfo();
-
-  // data: moveiesData,
-  // error: moviesError,
-  // isError: isMoviesError,
-  // isLoading: isMoviesLoading,
 
   const {
     data: multiSearchData,
@@ -50,15 +43,6 @@ export default function SearchPage({ searchValue }: SearchPageProp) {
         {multiSearchData?.map((movie) => (
           <li className="flex flex-col items-start " key={movie?.id}>
             <div className="relative w-full h-full">
-              {/* <Image
-                priority
-                src={`https://image.tmdb.org/t/p/w400${movie?.poster_path}`}
-                alt="Placeholder"
-                layout="fill"
-                placeholder="blur"
-                objectFit="cover"
-              /> */}
-
               {movie &&
               "poster_path" in movie &&
               movie?.poster_path &&
@@ -89,7 +73,12 @@ export default function SearchPage({ searchValue }: SearchPageProp) {
                 type="button"
                 onClick={() => {
                   if (movie?.id && parsedUser?.userID) {
-                    addBookmarks(movie?.id, parsedUser?.userID, "movie");
+                    addBookmarks(
+                      movie?.id?.toString(),
+                      JSON.stringify(movie),
+                      parsedUser?.userID,
+                      "movie"
+                    );
                   }
                 }}
               >

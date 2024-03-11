@@ -80,10 +80,11 @@ export default function Search() {
               >
                 {data?.poster_path ? (
                   <Image
+                    className="rounded-lg"
                     width={50}
                     height={50}
                     alt={data?.original_name || ""}
-                    src={`https://image.tmdb.org/t/p/w200${data?.poster_path}`}
+                    src={`https://image.tmdb.org/t/p/original${data?.poster_path}`}
                   />
                 ) : (
                   <div className="h-[75px] w-[50px] flex items-center justify-center">
