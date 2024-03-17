@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
+import { motion } from "framer-motion";
+
 import Link from "next/link";
 import Image from "next/image";
 
@@ -65,7 +67,11 @@ export default function Search() {
       {input && (
         <ul className="flex flex-col">
           {multiSearchData?.map((data) => (
-            <li
+            <motion.li
+              whileHover={{
+                backgroundColor: "#161D2F",
+                transition: { duration: 0.3 },
+              }}
               className="border-b-[1px] border-movieGreyishBlue"
               key={data?.id}
             >
@@ -76,7 +82,7 @@ export default function Search() {
                     : `/tvshow/${data?.id}`
                 }
                 onClick={() => setInput("")}
-                className="flex flex-row gap-2 p-2"
+                className="flex flex-row gap-2 p-"
               >
                 {data?.poster_path ? (
                   <Image
@@ -120,9 +126,13 @@ export default function Search() {
                   </div>
                 </div>
               </Link>
-            </li>
+            </motion.li>
           ))}
-          <button
+          <motion.button
+            whileHover={{
+              backgroundColor: "#333b50",
+              transition: { duration: 0.3 },
+            }}
             className="bg-movieGreyishBlue w-full p-2 flex flex-row justify-center items-center gap-1"
             onClick={submitInputValue}
           >
@@ -141,7 +151,7 @@ export default function Search() {
                 d="m8.25 4.5 7.5 7.5-7.5 7.5"
               />
             </svg>
-          </button>
+          </motion.button>
         </ul>
       )}
     </div>

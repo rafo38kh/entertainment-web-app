@@ -1,6 +1,6 @@
 import Link from "next/link";
-
 import ScrollGridLoading from "./ScrollGridLoading";
+import { motion } from "framer-motion";
 
 import { MovieData, PopularMovies, TVData } from "@/types";
 
@@ -14,9 +14,16 @@ function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
   if (isLoading) return <ScrollGridLoading />;
 
   return (
-    <ul className="flex gap-4 overflow-x-scroll no-scrollbar mt-4">
+    <ul className="flex gap-4 overflow-x-scroll no-scrollbar mt-4 py-4">
       {data?.map((el, index) => (
-        <li key={index}>
+        <motion.li
+          className="border-solid border-2 border-transparent rounded-lg"
+          whileHover={{
+            scale: 1.05,
+            borderColor: "#5A698F",
+            transition: { duration: 0.3 },
+          }}
+        >
           <Link
             href={type === "movie" ? `/movie/${el?.id}` : `/tvshow/${el?.id}`}
           >
@@ -26,7 +33,7 @@ function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
                   el?.backdrop_path &&
                   `url(https://image.tmdb.org/t/p/original${el.backdrop_path})`,
               }}
-              className="flex flex-col justify-end bg-no-repeat bg-cover relative rounded-lg overflow-hidden h-36 w-72 md:h-48 md:w-[22rem]"
+              className="flex flex-col justify-end bg-no-repeat bg-cover  relative rounded-lg overflow-hidden h-36 w-72 md:h-48 md:w-[22rem]"
             >
               <div className="p-4 pt-12 bg-gradient-to-t from-black to-transparent text-xs text-white/70">
                 <span className="w-full text-white font-medium text-[15px]">
@@ -38,7 +45,6 @@ function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
                       ? el?.release_date?.slice(0, 4)
                       : el?.first_air_date?.slice(0, 4)}
                   </span>
-
                   <span className="flex items-center gap-1">
                     {type === "movie" ? (
                       <>
@@ -85,7 +91,7 @@ function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
               </div>
             </div>
           </Link>
-        </li>
+        </motion.li>
       ))}
     </ul>
   );

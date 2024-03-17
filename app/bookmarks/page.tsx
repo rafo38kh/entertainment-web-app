@@ -37,9 +37,9 @@ export default function Bookmarks() {
   return isAuth && bookmarks.length > 0 ? (
     <div className="px-4">
       <div>
-        <span className="text-2xl">Movies</span>
+        {movies.length > 0 && <span className="text-2xl">Movies</span>}
 
-        <ul className="grid grid-cols-2 md:grid-cols-4 gap-4 my-4">
+        <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 ">
           {movies?.map((movie) => {
             return (
               <Card
@@ -54,9 +54,9 @@ export default function Bookmarks() {
       </div>
 
       <div>
-        <span className="text-2xl">TV Shows</span>
+        {tvShows.length > 0 && <span className="text-2xl">TV Shows</span>}
 
-        <ul className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+        <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 ">
           {tvShows?.map((tvShow) => (
             <Card
               type="tvshow"
@@ -69,6 +69,6 @@ export default function Bookmarks() {
       </div>
     </div>
   ) : (
-    <span className="text-2xl px-4">No bookmarks</span>
+    isAuth && <span className="text-2xl px-4">No bookmarks</span>
   );
 }

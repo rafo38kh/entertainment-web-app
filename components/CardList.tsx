@@ -33,7 +33,7 @@ export default function CardList({ data, type }: CardProps) {
         {type === "movie" ? "Movies" : "TV Shows"}
       </span>
 
-      <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4">
+      <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 ">
         {data?.results?.map((movie) => (
           <Card
             type={type}

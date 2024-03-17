@@ -1,6 +1,7 @@
+"use client";
 import { emptyArray } from "@/lib/getEmptyArray";
 
-export default function () {
+function CardLoading() {
   return (
     <ul className="grid grid-cols-2 md:grid-cols-4   gap-4 p-4">
       {emptyArray(20).map((card) => (
@@ -28,3 +29,4 @@ export default function () {
     </ul>
   );
 }
+export default CardLoading;

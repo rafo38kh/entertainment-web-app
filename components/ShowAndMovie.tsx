@@ -1,8 +1,9 @@
 "use client";
 import { useContext, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { BookmarkContext } from "@/contexts/BookmarksContextProvider";
+import { motion } from "framer-motion";
 
+import { BookmarkContext } from "@/contexts/BookmarksContextProvider";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 
 import api from "@/lib/api";
@@ -71,6 +72,28 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
     enabled: !!tvData?.id,
   });
 
+  const {
+    data: movieTeasers,
+    error: movieTeasersError,
+    isError: isMovieTeasersError,
+    isLoading: isMovieTeasersLoading,
+  } = useQuery<{ results: { type: string; key: string }[] }>({
+    queryKey: ["movieTeasers", movieData?.id],
+    queryFn: () => api.getMovieTeasers("movie", movieData?.id),
+    enabled: !!movieData?.id,
+  });
+
+  const {
+    data: tvTeasers,
+    error: tvTeasersError,
+    isError: isTvTeasersError,
+    isLoading: isTvTeasersLoading,
+  } = useQuery<{ results: { type: string; key: string }[] }>({
+    queryKey: ["tvTeasers", tvData?.id],
+    queryFn: () => api.getMovieTeasers("tv", tvData?.id),
+    enabled: !!tvData?.id,
+  });
+
   const handleOpenImage = (index: number) => {
     setIsModalOpen(true);
     setImageIndex(index);
@@ -93,6 +116,18 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
     (bookmark) => bookmark?.movieId === data?.id?.toString()
   )?.docId as string;
 
+  const IFrameMovieKey = movieTeasers?.results
+    ?.filter((movie) => movie?.type === "Teaser" || movie?.type === "Trailer")
+    ?.map((movie) => movie?.key)
+    ?.at(0);
+
+  const IFrameTVKey = tvTeasers?.results
+    ?.filter((movie) => movie?.type === "Trailer")
+    ?.map((movie) => movie?.key)
+    ?.at(0);
+
+  const currentIFrameKey = movieId ? IFrameMovieKey : IFrameTVKey;
+
   return (
     <>
       <div
@@ -101,9 +136,17 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
             data?.backdrop_path && data?.backdrop_path
           })`,
         }}
-        className="w-full lg:rounded-xl bg-cover bg-center bg-no-repeat "
+        className="relative w-full lg:rounded-xl bg-cover bg-center bg-no-repeat overflow-hidden"
       >
-        <div className="h-full md:h-full w-full lg:rounded-lg bg-gradient-to-bl from-black/50 to-black/15 px-6 p-4 backdrop-blur-xl backdrop-filter flex flex-col items-center justify-center">
+        {currentIFrameKey && (
+          <iframe
+            className="h-full w-full absolute overflow-hidden scale-150"
+            allow="autoplay; encrypted-media"
+            src={`https://www.youtube.com/embed/${currentIFrameKey}?autoplay=1&loop=1&playlist=${currentIFrameKey}&controls=0&disablekb=0&fs=0&iv_load_policy=3&rel=0`}
+          />
+        )}
+
+        <div className="h-full md:h-full w-full lg:rounded-lg bg-gradient-to-bl from-black/50 to-black/15 px-6 p-4 backdrop-blur-sm backdrop-filter flex flex-col items-center justify-center">
           <div className="grid md:grid-cols-2 md:grid-rows-[1fr_auto] gap-4 h-max">
             <div className="w-full h-full relative lg:rounded-lg overflow-hidden">
               {data && "backdrop_path" in data && data?.backdrop_path ? (
@@ -136,24 +179,18 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
                 </div>
               )}
             </div>
-            <div className="flex flex-col">
-              <span className="text-xl lg:text-4xl font-medium">
+
+            <div className="flex flex-col gap-2">
+              <span className="text-xl font-medium md:text-[3rem] md:leading-[3rem] lg:text-[4rem] lg:leading-[4rem] lg:py-4">
                 {data && "original_title" in data
                   ? data.original_title
                   : data?.name}
               </span>
-              <span className="flex flex-row gap-2 text-white/85 font-light text-xs md:text-sm lg:text-lg">
-                <span className="font-bold text-white">About</span>
-                {data && "original_title" in data
-                  ? data.original_title
-                  : data?.name}
-              </span>
-              <p className="text-xs md:text-sm lg:text-lg text-white/85 font-light">
-                {data?.overview}
-              </p>
             </div>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02, backgroundColor: "#000000b3" }}
+              transition={{ ease: "easeOut", duration: 0.2 }}
               className="bg-black/35 flex items-center justify-center p-3 w-full rounded-lg md:col-start-1 md:col-end-3 lg:text-2xl"
               type="button"
               onClick={() => {
@@ -202,80 +239,94 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
                   </svg>
                 </div>
               )}
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
       <div>
         <div className="px-4 pb-8 flex flex-col gap-4">
-          <div className="flex flex-row gap-2 items-center">
-            <span>{data && "adult" in data && data.adult && "🔞"}</span>
-          </div>
-          <ul className="flex flex-row gap-2 overflow-auto flex-wrap">
-            <span className="font-bold text-white">Genres</span>
-            {data?.genres?.map((genere, index) => (
-              <li
-                className="bg-white/90 text-semiDarkBlue font-light px-2 whitespace-nowrap rounded-md"
-                key={index}
-              >
-                {genere?.name}
-              </li>
-            ))}
-          </ul>
-          {data && "release_date" in data ? (
-            <p className="font-bold text-white flex flex-row gap-2">
-              Released
-              <span className="font-light text-white/85">
-                {data?.release_date}
+          <div className="w-full pt-4 grid md:grid-cols-2 justify-center items-start gap-4">
+            {/* md:flex md:flex-row-reverse md:gap-10 md:justify-between items-start */}
+            <div className="w-full max-w-[40rem] md:col-start-2 md:col-end-3 md:row-start-1 md:row-end-2">
+              <span className="flex flex-row gap-2 text-white/85 font-light ">
+                <span className="font-bold text-white">About</span>
+                {data && "original_title" in data
+                  ? data.original_title
+                  : data?.name}
               </span>
-            </p>
-          ) : (
-            <p className="font-bold text-white flex flex-row gap-2">
-              First Air Date{" "}
-              <span className="font-light text-white/85">
-                {data?.first_air_date}
-              </span>
-            </p>
-          )}
-          {data && "production_companies" in data ? (
-            <div>
-              <span className="font-bold text-white">Production Companies</span>
-              <ul>
-                {data?.production_companies?.map((company, idx) => (
-                  <li className="ml-4 font-light text-white/85" key={idx}>
-                    {company?.name}
+              <p className=" text-white/85 font-light">{data?.overview}</p>
+            </div>
+            <div className="flex flex-col gap-4 w-full md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2">
+              <span>{data && "adult" in data && data.adult && "🔞"}</span>
+              <ul className="flex flex-row gap-2 overflow-auto flex-wrap">
+                <span className="font-bold text-white">Genres</span>
+                {data?.genres?.map((genere, index) => (
+                  <li
+                    className="bg-white/90 text-semiDarkBlue font-light px-2 whitespace-nowrap rounded-md"
+                    key={index}
+                  >
+                    {genere?.name}
                   </li>
                 ))}
               </ul>
-            </div>
-          ) : null}
-          <span className="font-light text-white/85 flex flex-row gap-2">
-            <span className="font-bold text-white ">Original language</span>
-            {data && "original_language" in data && data?.original_language}
-          </span>
-          <Link
-            className="font-bold text-white flex flex-row gap-2 "
-            href={`${data?.homepage}`}
-          >
-            homepage{" "}
-            <span className="font-light text-white/85 hover:underline">
-              link
-            </span>
-          </Link>
-          {data && "runtime" in data && (
-            <div className="flex flex-row gap-1">
-              <span className="font-bold text-white">Duration</span>
-              <span className="font-light text-white/85">
-                {data?.runtime} min
+              {data && "release_date" in data ? (
+                <p className="font-bold text-white flex flex-row gap-2">
+                  Released
+                  <span className="font-light text-white/85">
+                    {data?.release_date}
+                  </span>
+                </p>
+              ) : (
+                <p className="font-bold text-white flex flex-row gap-2">
+                  First Air Date{" "}
+                  <span className="font-light text-white/85">
+                    {data?.first_air_date}
+                  </span>
+                </p>
+              )}
+              {data && "production_companies" in data ? (
+                <div>
+                  <span className="font-bold text-white">
+                    Production Companies
+                  </span>
+                  <ul>
+                    {data?.production_companies?.map((company, idx) => (
+                      <li className="ml-4 font-light text-white/85" key={idx}>
+                        {company?.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+              <span className="font-light text-white/85 flex flex-row gap-2">
+                <span className="font-bold text-white ">Original language</span>
+                {data && "original_language" in data && data?.original_language}
               </span>
+              <Link
+                className="font-bold text-white flex flex-row gap-2 "
+                href={`${data?.homepage}`}
+              >
+                homepage{" "}
+                <span className="font-light text-white/85 hover:underline">
+                  link
+                </span>
+              </Link>
+              {data && "runtime" in data && (
+                <div className="flex flex-row gap-1">
+                  <span className="font-bold text-white">Duration</span>
+                  <span className="font-light text-white/85">
+                    {data?.runtime} min
+                  </span>
+                </div>
+              )}
+              {data && "popularity" in data && (
+                <span className="font-light text-white/85 flex flex-row gap-2">
+                  <span className="font-bold text-white">popularity</span>{" "}
+                  {data?.popularity}
+                </span>
+              )}
             </div>
-          )}
-          {data && "popularity" in data && (
-            <span className="font-light text-white/85 flex flex-row gap-2">
-              <span className="font-bold text-white">popularity</span>{" "}
-              {data?.popularity}
-            </span>
-          )}
+          </div>
 
           {data && "seasons" in data && (
             <>
@@ -331,10 +382,11 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
               <ul className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {images?.backdrops?.slice(0, 6)?.map((backdrop, index) => (
                   <li key={backdrop?.file_path}>
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
                       aria-label={backdrop.file_path}
                       onClick={() => handleOpenImage(index)}
-                      className="h-full w-full rounded-lg overflow-hidden"
+                      className="h-full w-full rounded-lg overflow-hidden cursor-zoom-in"
                     >
                       <Image
                         className="w-full h-full"
@@ -343,7 +395,7 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
                         alt={backdrop?.file_path || ""}
                         src={`https://image.tmdb.org/t/p/original${backdrop?.file_path}`}
                       />
-                    </button>
+                    </motion.button>
                   </li>
                 ))}
               </ul>

@@ -65,6 +65,10 @@ export default function page() {
       ...prevState,
       page: currentPage,
     }));
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }, [currentPage]);
 
   return (

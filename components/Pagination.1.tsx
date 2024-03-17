@@ -1,16 +1,9 @@
 "use client";
-
 import { DOTS, usePagination } from "@/hooks/usePagination";
+import { PaginationProps } from "./Pagination";
+import { useEffect } from "react";
 
-export type PaginationProps = {
-  totalCount: number | undefined;
-  siblingCount: number;
-  currentPage: number;
-  pageSize: number;
-  onPageChange: any;
-};
-
-const Pagination = (props: PaginationProps) => {
+export const Pagination = (props: PaginationProps) => {
   const {
     onPageChange,
     totalCount,
@@ -39,6 +32,10 @@ const Pagination = (props: PaginationProps) => {
   const onPrevious = () => {
     onPageChange(currentPage - 1);
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <ul className="flex flex-row gap-4 justify-center">
@@ -105,5 +102,3 @@ const Pagination = (props: PaginationProps) => {
     </ul>
   );
 };
-
-export default Pagination;
