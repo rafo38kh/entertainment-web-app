@@ -1,8 +1,9 @@
+"use client";
 import { emptyArray } from "@/lib/getEmptyArray";
 
-export default function () {
+function CardLoading() {
   return (
-    <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6  gap-4 p-4">
+    <ul className="grid grid-cols-2 md:grid-cols-4   gap-4 p-4">
       {emptyArray(20).map((card) => (
         <li className="flex flex-col gap-2">
           <div className="flex items-center justify-center w-full h-56 animate-pulse-slow-3 bg-gray-300  dark:bg-gray-700 rounded-lg">
@@ -28,3 +29,4 @@ export default function () {
     </ul>
   );
 }
+export default CardLoading;

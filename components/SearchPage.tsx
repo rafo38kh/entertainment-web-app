@@ -9,6 +9,7 @@ import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import api from "@/lib/api";
 
 import { MultiSearchData } from "@/types";
+import CardLoading from "./CardLoading";
 
 type SearchPageProp = {
   searchValue: string;
@@ -18,34 +19,66 @@ export default function SearchPage({ searchValue }: SearchPageProp) {
   const { addBookmarks } = useBookmarks();
   const parsedUser = useGetUsersInfo();
 
-  const { data: multiSearchData, isFetching: isMultiSearchFetching } = useQuery<
-    MultiSearchData[]
-  >({
+  const {
+    data: multiSearchData,
+    error: multiSearchDataError,
+    isError: isMultiSearchDataError,
+    isLoading: isMultiSearchData,
+    isFetching: isMultiSearchFetching,
+  } = useQuery<MultiSearchData[]>({
     queryKey: ["multiSearch"],
     queryFn: () => api.multiSearch(searchValue || ""),
     enabled: !!searchValue,
   });
 
-  return (
+  return isMultiSearchData ? (
+    <CardLoading />
+  ) : (
     <div>
-      <span>{searchValue}</span>
+      <div className="flex flex-row gap-2  p-4">
+        <span>Search results for</span>
+        <span className="font-bold">{`'${searchValue}'`}</span>
+      </div>
       <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6  gap-4 p-4">
         {multiSearchData?.map((movie) => (
           <li className="flex flex-col items-start " key={movie?.id}>
-            <div className="relative w-full">
-              <Image
-                className="w-full rounded-lg "
-                width={100}
-                height={100}
-                alt={movie?.poster_path || ""}
-                src={`https://image.tmdb.org/t/p/w400${movie.poster_path}`}
-              />
+            <div className="relative w-full h-full">
+              {movie &&
+              "poster_path" in movie &&
+              movie?.poster_path &&
+              !isMultiSearchData ? (
+                <Image
+                  width={100}
+                  height={100}
+                  className="w-full rounded-lg h-60"
+                  alt={movie?.poster_path || ""}
+                  src={`https://image.tmdb.org/t/p/w400${movie?.poster_path}`}
+                />
+              ) : (
+                <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded py-10 dark:bg-gray-700">
+                  <svg
+                    className="w-1/2 h-full text-gray-200 dark:text-gray-600"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 18"
+                  >
+                    <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                  </svg>
+                </div>
+              )}
+
               <button
                 className="absolute top-4 right-4 aspect-square rounded-full bg-black/35 flex items-center justify-center p-3"
                 type="button"
                 onClick={() => {
                   if (movie?.id && parsedUser?.userID) {
-                    addBookmarks(movie?.id, parsedUser?.userID, "movie");
+                    addBookmarks(
+                      movie?.id?.toString(),
+                      JSON.stringify(movie),
+                      parsedUser?.userID,
+                      "movie"
+                    );
                   }
                 }}
               >
@@ -62,7 +95,7 @@ export default function SearchPage({ searchValue }: SearchPageProp) {
 
             <Link
               href={`/movie/${movie?.id}`}
-              className="w-full h-full flex flex-col  gap-2"
+              className="w-full  flex flex-col  gap-2"
             >
               <div className="flex flex-row gap-2 text-xs text-white/70">
                 <span>

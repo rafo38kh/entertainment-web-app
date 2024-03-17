@@ -8,14 +8,16 @@ export type User = {
 
 export type MovieBookmark = {
   docId: string;
-  type: "movie" | "tv";
+  movie: string;
   userID: string;
-  movieId: number;
+  movieId: string;
+  type: "movie" | "tv";
 };
 
 export type GeneralTypes = {
   id: number;
   adult: boolean;
+  docId?: string;
   overview: string;
   poster_path: string;
   backdrop_path: string;
@@ -66,8 +68,9 @@ export type TVShowData = {
   name: string;
   overview: string;
   popularity: number;
-  poster_path: string;
+  poster_path: string | undefined;
   original_language: string;
+  backdrop_path: string;
   production_companies: {
     id: number;
     logo_path: string;

@@ -1,6 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+
+import { BookmarkContext } from "@/contexts/BookmarksContextProvider";
+import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 
 import api from "@/lib/api";
 
@@ -10,6 +14,7 @@ import Image from "next/image";
 import Modal from "@/components/Modal";
 
 import { MovieData, MovieImages, TVShowData, TVShowImages } from "@/types";
+import { useBookmarks } from "@/hooks/useBookmarks";
 
 type TVMoiveProps = {
   tvShowId?: string;
@@ -17,9 +22,11 @@ type TVMoiveProps = {
 };
 
 export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
-  const MAX_LENGTH = 5;
   const [imageIndex, setImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { getBookmarks, addBookmarks, removeBookmarks } = useBookmarks();
+  const { bookmarks, setBookmarks } = useContext(BookmarkContext);
+  const parsedUser = useGetUsersInfo();
 
   const {
     data: movieData,
@@ -65,6 +72,28 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
     enabled: !!tvData?.id,
   });
 
+  const {
+    data: movieTeasers,
+    error: movieTeasersError,
+    isError: isMovieTeasersError,
+    isLoading: isMovieTeasersLoading,
+  } = useQuery<{ results: { type: string; key: string }[] }>({
+    queryKey: ["movieTeasers", movieData?.id],
+    queryFn: () => api.getMovieTeasers("movie", movieData?.id),
+    enabled: !!movieData?.id,
+  });
+
+  const {
+    data: tvTeasers,
+    error: tvTeasersError,
+    isError: isTvTeasersError,
+    isLoading: isTvTeasersLoading,
+  } = useQuery<{ results: { type: string; key: string }[] }>({
+    queryKey: ["tvTeasers", tvData?.id],
+    queryFn: () => api.getMovieTeasers("tv", tvData?.id),
+    enabled: !!tvData?.id,
+  });
+
   const handleOpenImage = (index: number) => {
     setIsModalOpen(true);
     setImageIndex(index);
@@ -72,142 +101,256 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
 
   const data = movieData ? movieData : tvData;
   const images = movieImages ? movieImages : tvShowImages;
+  const MAX_LENGTH =
+    images?.backdrops?.length && images?.backdrops?.length < 5
+      ? images?.backdrops?.length
+      : 6;
+
+  useEffect(() => {
+    if (parsedUser?.userID) {
+      getBookmarks(parsedUser?.userID, setBookmarks);
+    }
+  }, []);
+
+  const currentBookmarkId = bookmarks?.find(
+    (bookmark) => bookmark?.movieId === data?.id?.toString()
+  )?.docId as string;
+
+  const IFrameMovieKey = movieTeasers?.results
+    ?.filter((movie) => movie?.type === "Teaser" || movie?.type === "Trailer")
+    ?.map((movie) => movie?.key)
+    ?.at(0);
+
+  const IFrameTVKey = tvTeasers?.results
+    ?.filter((movie) => movie?.type === "Trailer")
+    ?.map((movie) => movie?.key)
+    ?.at(0);
+
+  const currentIFrameKey = movieId ? IFrameMovieKey : IFrameTVKey;
 
   return (
     <>
-      <div className="relative">
-        {data && "backdrop_path" in data && data?.backdrop_path ? (
-          <Image
-            className="w-full mb-6"
-            width={100}
-            height={100}
-            alt={data?.backdrop_path || ""}
-            src={`https://image.tmdb.org/t/p/w400${data?.backdrop_path}`}
+      <div
+        style={{
+          backgroundImage: `url(https://image.tmdb.org/t/p/w400${
+            data?.backdrop_path && data?.backdrop_path
+          })`,
+        }}
+        className="relative w-full lg:rounded-xl bg-cover bg-center bg-no-repeat overflow-hidden"
+      >
+        {currentIFrameKey && (
+          <iframe
+            className="h-full w-full absolute overflow-hidden scale-150"
+            allow="autoplay; encrypted-media"
+            src={`https://www.youtube.com/embed/${currentIFrameKey}?autoplay=1&loop=1&playlist=${currentIFrameKey}&controls=0&disablekb=0&fs=0&iv_load_policy=3&rel=0`}
           />
-        ) : data && "poster_path" in data && data?.poster_path ? (
-          <Image
-            width={100}
-            height={100}
-            className="w-full mb-6"
-            alt={data?.poster_path || ""}
-            src={`https://image.tmdb.org/t/p/w400${data?.poster_path}`}
-          />
-        ) : (
-          <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded py-10 dark:bg-gray-700">
-            <svg
-              className="w-1/2 h-full text-gray-200 dark:text-gray-600"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 20 18"
-            >
-              <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-            </svg>
-          </div>
         )}
 
-        <div className="px-4 flex flex-col gap-4">
-          <span className=" text-4xl font-medium">
-            {data && "original_title" in data
-              ? data.original_title
-              : data?.name}
-          </span>
-          <div className="flex flex-row gap-2 items-center">
-            <span className="flex flex-row gap-2 text-white/85 font-light">
-              <span className="font-bold text-white">About</span>
-              {data && "original_title" in data
-                ? data.original_title
-                : data?.name}
-            </span>
-            <span>{data && "adult" in data && data.adult && "🔞"}</span>
+        <div className="h-full md:h-full w-full lg:rounded-lg bg-gradient-to-bl from-black/50 to-black/15 px-6 p-4 backdrop-blur-sm backdrop-filter flex flex-col items-center justify-center">
+          <div className="grid md:grid-cols-2 md:grid-rows-[1fr_auto] gap-4 h-max">
+            <div className="w-full h-full relative lg:rounded-lg overflow-hidden">
+              {data && "backdrop_path" in data && data?.backdrop_path ? (
+                <Image
+                  className="w-full rounded-md"
+                  width={1000}
+                  height={100}
+                  alt={data?.backdrop_path || ""}
+                  src={`https://image.tmdb.org/t/p/original${data?.backdrop_path}`}
+                />
+              ) : data && "poster_path" in data && data?.poster_path ? (
+                <Image
+                  width={1000}
+                  height={100}
+                  className="w-full rounded-md"
+                  alt={data?.poster_path || ""}
+                  src={`https://image.tmdb.org/t/p/original${data?.poster_path}`}
+                />
+              ) : (
+                <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded py-10 dark:bg-gray-700">
+                  <svg
+                    className="w-1/2 h-full text-gray-200 dark:text-gray-600"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 20 18"
+                  >
+                    <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                  </svg>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <span className="text-xl font-medium md:text-[3rem] md:leading-[3rem] lg:text-[4rem] lg:leading-[4rem] lg:py-4">
+                {data && "original_title" in data
+                  ? data.original_title
+                  : data?.name}
+              </span>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.02, backgroundColor: "#000000b3" }}
+              transition={{ ease: "easeOut", duration: 0.2 }}
+              className="bg-black/35 flex items-center justify-center p-3 w-full rounded-lg md:col-start-1 md:col-end-3 lg:text-2xl"
+              type="button"
+              onClick={() => {
+                if (currentBookmarkId) {
+                  removeBookmarks(currentBookmarkId);
+                } else {
+                  if (data?.id && parsedUser?.userID) {
+                    addBookmarks(
+                      data.id?.toString(),
+                      JSON.stringify(data),
+                      parsedUser.userID,
+                      movieId ? "movie" : "tv"
+                    );
+                  }
+                }
+              }}
+            >
+              {currentBookmarkId ? (
+                <div className="flex flex-row justify-center items-center gap-2">
+                  <span>Bookmarked</span>
+                  <svg
+                    width="12"
+                    height="14"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10.61 0c.14 0 .273.028.4.083a1.03 1.03 0 0 1 .657.953v11.928a1.03 1.03 0 0 1-.656.953c-.116.05-.25.074-.402.074-.291 0-.543-.099-.756-.296L5.833 9.77l-4.02 3.924c-.218.203-.47.305-.756.305a.995.995 0 0 1-.4-.083A1.03 1.03 0 0 1 0 12.964V1.036A1.03 1.03 0 0 1 .656.083.995.995 0 0 1 1.057 0h9.552Z"
+                      fill="#FFF"
+                    />
+                  </svg>
+                </div>
+              ) : (
+                <div className="flex flex-row justify-center items-center gap-2">
+                  <span>Bookmark</span>
+                  <svg
+                    width="12"
+                    height="14"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m10.518.75.399 12.214-5.084-4.24-4.535 4.426L.75 1.036l9.768-.285Z"
+                      stroke="#FFF"
+                      strokeWidth="1.5"
+                      fill="none"
+                    />
+                  </svg>
+                </div>
+              )}
+            </motion.button>
           </div>
-          <p className="text-white/85 font-light">{data?.overview}</p>
-          <ul className="flex flex-row gap-2 overflow-auto flex-wrap">
-            <span className="font-bold text-white">Genres</span>
-            {data?.genres?.map((genere, index) => (
-              <li
-                className="bg-white/90 text-semiDarkBlue font-light px-2 whitespace-nowrap rounded-md"
-                key={index}
-              >
-                {genere?.name}
-              </li>
-            ))}
-          </ul>
-          {data && "release_date" in data ? (
-            <p className="font-bold text-white flex flex-row gap-2">
-              Released
-              <span className="font-light text-white/85">
-                {data?.release_date}
+        </div>
+      </div>
+      <div>
+        <div className="px-4 pb-8 flex flex-col gap-4">
+          <div className="w-full pt-4 grid md:grid-cols-2 justify-center items-start gap-4">
+            {/* md:flex md:flex-row-reverse md:gap-10 md:justify-between items-start */}
+            <div className="w-full max-w-[40rem] md:col-start-2 md:col-end-3 md:row-start-1 md:row-end-2">
+              <span className="flex flex-row gap-2 text-white/85 font-light ">
+                <span className="font-bold text-white">About</span>
+                {data && "original_title" in data
+                  ? data.original_title
+                  : data?.name}
               </span>
-            </p>
-          ) : (
-            <p className="font-bold text-white flex flex-row gap-2">
-              First Air Date{" "}
-              <span className="font-light text-white/85">
-                {data?.first_air_date}
-              </span>
-            </p>
-          )}
-          {data && "production_companies" in data ? (
-            <div>
-              <span className="font-bold text-white">Production Companies</span>
-              <ul>
-                {data?.production_companies?.map((company, idx) => (
-                  <li className="ml-4 font-light text-white/85" key={idx}>
-                    {company?.name}
+              <p className=" text-white/85 font-light">{data?.overview}</p>
+            </div>
+            <div className="flex flex-col gap-4 w-full md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2">
+              <span>{data && "adult" in data && data.adult && "🔞"}</span>
+              <ul className="flex flex-row gap-2 overflow-auto flex-wrap">
+                <span className="font-bold text-white">Genres</span>
+                {data?.genres?.map((genere, index) => (
+                  <li
+                    className="bg-white/90 text-semiDarkBlue font-light px-2 whitespace-nowrap rounded-md"
+                    key={index}
+                  >
+                    {genere?.name}
                   </li>
                 ))}
               </ul>
-            </div>
-          ) : null}
-          <span className="font-light text-white/85 flex flex-row gap-2">
-            <span className="font-bold text-white ">Original language</span>
-            {data && "original_language" in data && data?.original_language}
-          </span>
-          <Link
-            className="font-bold text-white flex flex-row gap-2 "
-            href={`${data?.homepage}`}
-          >
-            homepage{" "}
-            <span className="font-light text-white/85 hover:underline">
-              link
-            </span>
-          </Link>
-          {data && "runtime" in data && (
-            <div className="flex flex-row gap-1">
-              <span className="font-bold text-white">Duration</span>
-              <span className="font-light text-white/85">
-                {data?.runtime} min
+              {data && "release_date" in data ? (
+                <p className="font-bold text-white flex flex-row gap-2">
+                  Released
+                  <span className="font-light text-white/85">
+                    {data?.release_date}
+                  </span>
+                </p>
+              ) : (
+                <p className="font-bold text-white flex flex-row gap-2">
+                  First Air Date{" "}
+                  <span className="font-light text-white/85">
+                    {data?.first_air_date}
+                  </span>
+                </p>
+              )}
+              {data && "production_companies" in data ? (
+                <div>
+                  <span className="font-bold text-white">
+                    Production Companies
+                  </span>
+                  <ul>
+                    {data?.production_companies?.map((company, idx) => (
+                      <li className="ml-4 font-light text-white/85" key={idx}>
+                        {company?.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+              <span className="font-light text-white/85 flex flex-row gap-2">
+                <span className="font-bold text-white ">Original language</span>
+                {data && "original_language" in data && data?.original_language}
               </span>
+              <Link
+                className="font-bold text-white flex flex-row gap-2 "
+                href={`${data?.homepage}`}
+              >
+                homepage{" "}
+                <span className="font-light text-white/85 hover:underline">
+                  link
+                </span>
+              </Link>
+              {data && "runtime" in data && (
+                <div className="flex flex-row gap-1">
+                  <span className="font-bold text-white">Duration</span>
+                  <span className="font-light text-white/85">
+                    {data?.runtime} min
+                  </span>
+                </div>
+              )}
+              {data && "popularity" in data && (
+                <span className="font-light text-white/85 flex flex-row gap-2">
+                  <span className="font-bold text-white">popularity</span>{" "}
+                  {data?.popularity}
+                </span>
+              )}
             </div>
-          )}
-          {data && "popularity" in data && (
-            <span className="font-light text-white/85 flex flex-row gap-2">
-              <span className="font-bold text-white">popularity</span>{" "}
-              {data?.popularity}
-            </span>
-          )}
-          <span className="w-full h-[1px] bg-slate-400"></span>
+          </div>
+
           {data && "seasons" in data && (
             <>
               <span>Seasons</span>
-              <ul className="grid grid-cols-2 gap-4">
+              <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {data?.seasons.map((seson) => (
-                  <li key={seson.id}>
+                  <li
+                    key={seson.id}
+                    className="flex flex-col items-start mb-4 "
+                  >
                     <Link
                       href={`/tvshow/${seson?.id}`}
-                      className="flex flex-col gap-2 w-full h-full justify-between"
+                      className="w-full h-full"
                     >
                       {seson?.poster_path ? (
                         <Image
                           className="w-full h-full rounded-xl"
-                          width={100}
-                          height={100}
+                          width={1000}
+                          height={1000}
                           alt={seson?.poster_path || ""}
-                          src={`https://image.tmdb.org/t/p/w400${seson?.poster_path}`}
+                          src={`https://image.tmdb.org/t/p/original${seson?.poster_path}`}
                         />
                       ) : (
-                        <div className="flex items-center justify-center w-full h-60 bg-gray-300 rounded dark:bg-gray-700">
+                        <div className="flex items-center justify-center w-full h-full bg-gray-300 rounded  dark:bg-gray-700">
                           <svg
                             className="w-1/2 h-full text-gray-200 dark:text-gray-600"
                             aria-hidden="true"
@@ -220,9 +363,9 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
                         </div>
                       )}
 
-                      <div className="flex flex-col ">
+                      <div className="flex flex-row gap-2 text-xs text-white/70 md:text-sm lg:text-base">
                         <span>{seson.name}</span>
-                        <span className="text-xs text-white/75">
+                        <span className="text-white/75">
                           ep:{seson.episode_count}
                         </span>
                       </div>
@@ -236,21 +379,23 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
             <div className="flex flex-col gap-4">
               <span className="w-full h-[1px] bg-slate-400"></span>
               <span>Gallery</span>
-              <ul className="grid grid-cols-2 gap-2">
+              <ul className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {images?.backdrops?.slice(0, 6)?.map((backdrop, index) => (
                   <li key={backdrop?.file_path}>
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
                       aria-label={backdrop.file_path}
                       onClick={() => handleOpenImage(index)}
+                      className="h-full w-full rounded-lg overflow-hidden cursor-zoom-in"
                     >
                       <Image
-                        className="w-full"
-                        width={backdrop?.width}
-                        height={backdrop?.height}
+                        className="w-full h-full"
+                        width={backdrop?.width || 1000}
+                        height={backdrop?.height || 1000}
                         alt={backdrop?.file_path || ""}
-                        src={`https://image.tmdb.org/t/p/w400${backdrop?.file_path}`}
+                        src={`https://image.tmdb.org/t/p/original${backdrop?.file_path}`}
                       />
-                    </button>
+                    </motion.button>
                   </li>
                 ))}
               </ul>

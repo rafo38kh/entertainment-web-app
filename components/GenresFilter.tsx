@@ -61,7 +61,7 @@ export default function GenresFilter({
         <div className="flex items-center justify-center gap-4">
           <label
             htmlFor="adult"
-            className={`text-semiDarkBlue inline-block font-light hover:cursor-pointer px-2 whitespace-nowrap rounded-md ${
+            className={`text-semiDarkBlue inline-block font-light hover:cursor-pointer px-2 whitespace-nowrap rounded-md cursor-pointer ${
               filterOptions?.adult ? "bg-white/90" : "bg-white/50"
             }`}
           >
@@ -109,7 +109,11 @@ export default function GenresFilter({
                       genre: genre?.id?.toString(),
                     }))
                   }
-                  className="bg-white/90 text-semiDarkBlue font-light px-2 whitespace-nowrap rounded-md"
+                  className={`text-semiDarkBlue font-light px-2 whitespace-nowrap rounded-md ${
+                    Number(filterOptions?.genre) === genre.id
+                      ? "bg-white/90"
+                      : "bg-white/50"
+                  }`}
                 >
                   {genre?.name}
                 </button>

@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
+import { motion } from "framer-motion";
+
 import Link from "next/link";
 import Image from "next/image";
 
@@ -65,7 +67,14 @@ export default function Search() {
       {input && (
         <ul className="flex flex-col">
           {multiSearchData?.map((data) => (
-            <li className="border mb-2" key={data?.id}>
+            <motion.li
+              whileHover={{
+                backgroundColor: "#161D2F",
+                transition: { duration: 0.3 },
+              }}
+              className="border-b-[1px] border-movieGreyishBlue"
+              key={data?.id}
+            >
               <Link
                 href={
                   data?.media_type === "movie"
@@ -73,14 +82,15 @@ export default function Search() {
                     : `/tvshow/${data?.id}`
                 }
                 onClick={() => setInput("")}
-                className="flex flex-row gap-2"
+                className="flex flex-row gap-2 p-"
               >
                 {data?.poster_path ? (
                   <Image
+                    className="rounded-lg"
                     width={50}
                     height={50}
                     alt={data?.original_name || ""}
-                    src={`https://image.tmdb.org/t/p/w200${data?.poster_path}`}
+                    src={`https://image.tmdb.org/t/p/original${data?.poster_path}`}
                   />
                 ) : (
                   <div className="h-[75px] w-[50px] flex items-center justify-center">
@@ -106,18 +116,42 @@ export default function Search() {
                     {data?.media_type === "movie" ? data?.title : data?.name}
                   </span>
                   <div className="flex flex-row gap-2">
-                    <span>{data?.adult && "18+"}</span>
-                    <span>{data?.media_type}</span>
                     <span>
                       {data?.media_type === "movie"
                         ? data?.release_date?.slice(0, 4)
                         : data?.first_air_date?.slice(0, 4)}
                     </span>
+                    <span>{data?.media_type}</span>
+                    <span>{data?.adult ? "18+" : null}</span>
                   </div>
                 </div>
               </Link>
-            </li>
+            </motion.li>
           ))}
+          <motion.button
+            whileHover={{
+              backgroundColor: "#333b50",
+              transition: { duration: 0.3 },
+            }}
+            className="bg-movieGreyishBlue w-full p-2 flex flex-row justify-center items-center gap-1"
+            onClick={submitInputValue}
+          >
+            View all results
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="w-4 h-4"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m8.25 4.5 7.5 7.5-7.5 7.5"
+              />
+            </svg>
+          </motion.button>
         </ul>
       )}
     </div>

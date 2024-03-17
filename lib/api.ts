@@ -121,6 +121,13 @@ const getMovieLanguages = async () => {
   return response?.data || [];
 };
 
+const getMovieTeasers = async (movieType: string, id: number | undefined) => {
+  const response = await axiosFetch.get<{
+    results: { type: string; key: string }[];
+  }>(`${movieType}/${id}/videos?language=en-US`);
+  return response?.data || [];
+};
+
 const multiSearch = async (query: string) => {
   const response = await axiosFetch.get<{ results: MultiSearchData[] }>(
     `search/multi?query=${query}&include_adult=true&language=en-US&page=1`
@@ -189,6 +196,7 @@ const api = {
   getMovieLanguages,
   getFilteredShows,
   getOnTheAir,
+  getMovieTeasers,
 };
 
 export default api;

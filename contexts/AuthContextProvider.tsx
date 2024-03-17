@@ -1,15 +1,37 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+"use client";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+  ReactNode,
+  createContext,
+} from "react";
 
 import { signInWithPopup, signOut } from "firebase/auth";
 import { auth, googleProvider } from "@/config/firebase";
 
-export default function Auth({
-  isSignOutShowing,
-  setIsSignOutShowing,
-}: {
-  isSignOutShowing: boolean;
-  setIsSignOutShowing: Dispatch<SetStateAction<boolean>>;
-}) {
+type AuthContext = {
+  isAuth: boolean | null;
+  logOut: () => void;
+  signInWithGoogle: () => void;
+  setIsAuth: Dispatch<SetStateAction<boolean>>;
+};
+
+const initialContext = {
+  isAuth: null,
+  logOut: () => {},
+  setIsAuth: () => {},
+  signInWithGoogle: () => {},
+};
+
+export const AuthContext = createContext<AuthContext>(initialContext);
+
+type AuthContextProviderProps = { children: ReactNode | ReactNode[] };
+
+export default function AuthContextProvider({
+  children,
+}: AuthContextProviderProps) {
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
@@ -45,7 +67,6 @@ export default function Auth({
     try {
       await signOut(auth);
       setIsAuth(false);
-      setIsSignOutShowing(false);
 
       window?.localStorage?.removeItem("user");
     } catch (error) {
@@ -53,18 +74,7 @@ export default function Auth({
     }
   };
 
-  return (
-    <div>
-      {!isAuth && <button onClick={signInWithGoogle}>Sign in</button>}
+  const value = { isAuth, setIsAuth, signInWithGoogle, logOut };
 
-      {isAuth && isSignOutShowing && (
-        <button
-          onClick={logOut}
-          className="bg-black p-4 whitespace-nowrap absolute top-10 right-0 rounded"
-        >
-          Sign out
-        </button>
-      )}
-    </div>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

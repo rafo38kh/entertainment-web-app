@@ -4,8 +4,11 @@ export default function ScrollGridLoading() {
   return (
     <div className=" my-4">
       <ul className="flex gap-4 overflow-x-scroll no-scrollbar mt-4 animate-pulse-slow-3">
-        {emptyArray.map(() => (
-          <li className="flex items-center justify-center w-full h-full bg-gray-300 rounded-lg dark:bg-gray-700">
+        {emptyArray.map((_, idx) => (
+          <li
+            key={idx}
+            className="flex items-center justify-center w-full h-full bg-gray-300 rounded-lg dark:bg-gray-700"
+          >
             <div className="flex flex-col justify-center items-center bg-no-repeat bg-cover relative rounded-lg overflow-hidden h-36 w-72">
               <svg
                 className="w-1/3 h-full text-gray-200 dark:text-gray-600"
