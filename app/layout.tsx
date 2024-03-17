@@ -33,9 +33,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <div className="hidden lg:inline">
             <Navigation />
           </div>
-          <div className="lg:h-[calc(100vh_-_2rem)] lg:w-full lg:overflow-y-scroll">
+          <div className="lg:w-full lg:overflow-y-scroll">
             <Search />
-            <BookmarkContextProvider>{children}</BookmarkContextProvider>
+
+            <div className="pt-16">
+              <BookmarkContextProvider>{children}</BookmarkContextProvider>
+            </div>
           </div>
         </Providers>
       </body>
