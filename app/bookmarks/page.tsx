@@ -9,6 +9,7 @@ import { MovieData } from "@/types";
 import { TVShowData } from "@/types";
 
 import Card from "@/components/Card";
+import SignIn from "@/components/SignIn";
 
 export default function Bookmarks() {
   const { isAuth } = useContext(AuthContext);
@@ -68,7 +69,9 @@ export default function Bookmarks() {
         </ul>
       </div>
     </div>
+  ) : isAuth ? (
+    <span className="text-2xl px-4">No bookmarks</span>
   ) : (
-    isAuth && <span className="text-2xl px-4">No bookmarks</span>
+    <SignIn />
   );
 }

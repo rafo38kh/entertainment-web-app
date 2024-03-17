@@ -65,13 +65,13 @@ export default function Card<T>({
         <motion.button
           whileHover={{ scale: 1.02, backgroundColor: "#000000c5" }}
           whileTap={{ scale: 1.05 }}
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 100 }}
+          // initial={{ opacity: 0, y: 50 }}
+          // animate={{ opacity: 1, y: 0 }}
+          // exit={{ opacity: 0, y: 100 }}
           // transition={{ duration: 0.3 }}
           // className="top-4 right-4 aspect-square rounded-full absolute lg:hidden lg:bottom-2 lg:w-5/6 bg-black/75 md:bg-black/45 lg:group-hover:flex lg:items-center lg:justify-center p-2 lg:rounded-lg lg:left-0 lg:right-0 lg:text-center lg:mx-auto lg:mt-auto h-10"
           //
-          className="absolute bg-black/75 aspect-square h-10 right-0 rounded-full top-2 lg:top-auto lg:w-5/6 lg:bottom-2 mx-4 lg:rounded-lg lg:py-2 "
+          className="absolute bg-black/75 aspect-square h-10 right-0 rounded-full top-2 lg:top-auto lg:w-5/6 lg:bottom-2 mx-4 lg:rounded-lg lg:py-2 lg:hidden lg:group-hover:flex lg:justify-center lg:items-center"
           type="button"
           onClick={() => {
             if (data) {

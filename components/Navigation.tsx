@@ -69,34 +69,45 @@ export default function Navigation() {
         </Link>
       </div>
 
-      <button
-        type="button"
-        onClick={() => setIsSignOutShowing((prevState) => !prevState)}
-        className="relative"
-      >
-        {isAuth && (
-          <div className="aspect-square rounded-full overflow-hidden w-9">
-            {parsedUser?.profilePhoto && (
-              <Image
-                height={100}
-                width={100}
-                alt="Picture of the author"
-                src={parsedUser?.profilePhoto}
-              />
-            )}
-          </div>
-        )}
+      {!isAuth ? (
+        <button onClick={signInWithGoogle}>Sign in</button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setIsSignOutShowing((prevState) => !prevState)}
+          className="relative"
+        >
+          {isAuth && (
+            <div className="flex flex-col items-center gap-1">
+              <div className="aspect-square rounded-full overflow-hidden w-9 lg:flex">
+                {parsedUser?.profilePhoto && (
+                  <Image
+                    height={100}
+                    width={100}
+                    alt="Picture of the author"
+                    src={parsedUser?.profilePhoto}
+                  />
+                )}
+              </div>
+              <button
+                onClick={logOut}
+                className="hidden whitespace-nowrap lg:inline-block"
+              >
+                Sign out
+              </button>
+            </div>
+          )}
 
-        {isAuth && isSignOutShowing && (
-          <button
-            onClick={logOut}
-            className="bg-black p-4 whitespace-nowrap absolute top-10 right-0 rounded"
-          >
-            Sign out
-          </button>
-        )}
-      </button>
-      {!isAuth && <button onClick={signInWithGoogle}>Sign in</button>}
+          {isAuth && isSignOutShowing && (
+            <button
+              onClick={logOut}
+              className="bg-black p-4 whitespace-nowrap absolute top-10 right-0 rounded lg:hidden"
+            >
+              Sign out
+            </button>
+          )}
+        </button>
+      )}
     </div>
   );
 }

@@ -39,6 +39,7 @@ export default function Search() {
   };
 
   return (
+    // <div className="fixed top-4 z-50 bg-black w-[calc(100%_-_130px)] rounded-lg">
     <div>
       <form
         action="#"
