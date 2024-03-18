@@ -6,6 +6,6 @@ type Params = {
   };
 };
 
-export default function Page({ params }: Params) {
+export default function SearchesPage({ params }: Params) {
   return <SearchPage searchValue={params?.value} />;
 }

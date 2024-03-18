@@ -38,12 +38,15 @@ export default function Bookmarks() {
   return isAuth && bookmarks.length > 0 ? (
     <div className="px-4">
       <div>
-        {movies.length > 0 && <span className="text-2xl">Movies</span>}
+        {movies.length > 0 && (
+          <span className="text-2xl lg:text-4xl px-4">Movies</span>
+        )}
 
         <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 ">
           {movies?.map((movie) => {
             return (
               <Card
+                key={movie?.id}
                 data={movie}
                 type="movie"
                 getKey={(data) => data?.id?.toString()}
@@ -55,11 +58,14 @@ export default function Bookmarks() {
       </div>
 
       <div>
-        {tvShows.length > 0 && <span className="text-2xl">TV Shows</span>}
+        {tvShows.length > 0 && (
+          <span className="text-2xl lg:text-4xl px-4">TV Shows</span>
+        )}
 
         <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 ">
           {tvShows?.map((tvShow) => (
             <Card
+              key={tvShow?.id}
               type="tvshow"
               data={tvShow}
               getKey={(data) => data?.id?.toString()}

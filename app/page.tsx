@@ -61,7 +61,7 @@ export default function Home() {
     <>
       <div className="flex flex-col gap-8">
         <div className="pl-4">
-          <span className="text-2xl">Upcoming</span>
+          <span className="text-2xl lg:text-4xl">Upcoming</span>
 
           <ScrollGrid
             type="movie"
@@ -70,7 +70,7 @@ export default function Home() {
           />
         </div>
         <div className="pl-4">
-          <span className="text-2xl">Now Playing</span>
+          <span className="text-2xl lg:text-4xl">Now Playing</span>
 
           <ScrollGrid
             type="movie"

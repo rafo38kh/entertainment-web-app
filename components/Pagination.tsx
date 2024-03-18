@@ -1,4 +1,6 @@
 "use client";
+import { useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { DOTS, usePagination } from "@/hooks/usePagination";
 
@@ -9,26 +11,23 @@ export type PaginationProps = {
   pageSize: number;
   onPageChange: any;
 };
-
-const Pagination = (props: PaginationProps) => {
+export default function Pagination(props: PaginationProps) {
   const {
-    onPageChange,
-    totalCount,
-    siblingCount = 1,
-    currentPage,
     pageSize,
+    totalCount = 1000,
+    currentPage,
+    onPageChange,
+    siblingCount = 1,
   } = props;
 
-  const paginationRange =
-    totalCount &&
-    usePagination({
-      currentPage,
-      totalCount,
-      siblingCount,
-      pageSize,
-    });
+  const paginationRange = usePagination({
+    currentPage,
+    totalCount,
+    siblingCount,
+    pageSize,
+  });
 
-  if (paginationRange && (currentPage === 0 || paginationRange.length < 2)) {
+  if (currentPage === 0 || (paginationRange && paginationRange?.length < 2)) {
     return null;
   }
 
@@ -67,13 +66,18 @@ const Pagination = (props: PaginationProps) => {
         </button>
       </li>
       {paginationRange &&
-        paginationRange.map((pageNumber) => {
+        paginationRange?.map((pageNumber) => {
           if (pageNumber === DOTS) {
-            return <li className="pagination-item dots">&#8230;</li>;
+            return (
+              <li key={uuidv4()} className="pagination-item dots">
+                &#8230;
+              </li>
+            );
           }
 
           return (
             <li
+              key={uuidv4()}
               className={`cursor-pointer ${
                 currentPage === pageNumber ? "text-red-500" : "text-white "
               }`}
@@ -104,6 +108,4 @@ const Pagination = (props: PaginationProps) => {
       </li>
     </ul>
   );
-};
-
-export default Pagination;
+}

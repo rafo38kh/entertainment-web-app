@@ -63,7 +63,7 @@ export default function TvShowsPage() {
         setFilterOptions={setFilterOptions}
       />
       <div className="pl-4 my-4">
-        <span className="text-2xl">On The Air</span>
+        <span className="text-2xl lg:text-4xl">On The Air</span>
         <ScrollGrid
           type="tv"
           data={onTheAirData ?? []}

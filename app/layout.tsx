@@ -36,9 +36,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <div className="lg:w-full lg:overflow-y-scroll">
             <Search />
 
-            <div className="pt-16">
-              <BookmarkContextProvider>{children}</BookmarkContextProvider>
-            </div>
+            <BookmarkContextProvider>{children}</BookmarkContextProvider>
           </div>
         </Providers>
       </body>

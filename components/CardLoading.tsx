@@ -4,8 +4,8 @@ import { emptyArray } from "@/lib/getEmptyArray";
 function CardLoading() {
   return (
     <ul className="grid grid-cols-2 md:grid-cols-4   gap-4 p-4">
-      {emptyArray(20).map((card) => (
-        <li className="flex flex-col gap-2">
+      {emptyArray(20).map((card, index) => (
+        <li key={index} className="flex flex-col gap-2">
           <div className="flex items-center justify-center w-full h-56 animate-pulse-slow-3 bg-gray-300  dark:bg-gray-700 rounded-lg">
             <svg
               className="w-1/2 h-full text-gray-200 dark:text-gray-600"

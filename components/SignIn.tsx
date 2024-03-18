@@ -1,4 +1,5 @@
 "use client";
+
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContextProvider";
 
@@ -10,8 +11,8 @@ export default function SignIn() {
       <div className="bg-semiDarkBlue w-72 aspect-square rounded-lg flex flex-col justify-center items-center gap-8">
         <svg
           version="1.1"
-          className="w-14 h-14"
           viewBox="0 0 48 48"
+          className="w-14 h-14"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path

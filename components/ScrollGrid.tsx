@@ -15,8 +15,9 @@ function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
 
   return (
     <ul className="flex gap-4 overflow-x-scroll no-scrollbar mt-4 py-4">
-      {data?.map((el, index) => (
+      {data?.map((el) => (
         <motion.li
+          key={el?.id}
           className="border-solid border-2 border-transparent rounded-lg"
           whileHover={{
             scale: 1.05,

@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { Variants, motion } from "framer-motion";
 
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import { BookmarkContext } from "@/contexts/BookmarksContextProvider";
+import { MovieData, TVShowData } from "@/types";
 
 type CardProps<T> = {
   data: T;
@@ -28,15 +29,44 @@ export default function Card<T>({
     (bookmark) => bookmark?.movieId == getKey(data)
   );
 
+  const list: Variants = {
+    visible: {
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.1,
+      },
+    },
+    hidden: {
+      transition: {
+        when: "afterChildren",
+      },
+    },
+  };
+
+  const item: Variants = {
+    visible: {
+      y: 0,
+      opacity: 1,
+    },
+    hidden: {
+      y: 5,
+      opacity: 0,
+      transition: {
+        delay: 0.1,
+      },
+    },
+  };
+
   return (
     <motion.li
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.3 }}
+      whileHover={{ scale: 0.97 }}
       className="flex flex-col items-start group"
       key={getKey(data)}
     >
       <motion.div
-        transition={{ duration: 0.3 }}
+        variants={list}
+        initial="hidden"
+        whileHover="visible"
         className="relative w-full h-full lg:flex lg:items-end"
       >
         <Link href={`/${type}/${getKey(data)}`}>
@@ -63,16 +93,9 @@ export default function Card<T>({
           )}
         </Link>
         <motion.button
-          whileHover={{ scale: 1.02, backgroundColor: "#000000c5" }}
-          whileTap={{ scale: 1.05 }}
-          // initial={{ opacity: 0, y: 50 }}
-          // animate={{ opacity: 1, y: 0 }}
-          // exit={{ opacity: 0, y: 100 }}
-          // transition={{ duration: 0.3 }}
-          // className="top-4 right-4 aspect-square rounded-full absolute lg:hidden lg:bottom-2 lg:w-5/6 bg-black/75 md:bg-black/45 lg:group-hover:flex lg:items-center lg:justify-center p-2 lg:rounded-lg lg:left-0 lg:right-0 lg:text-center lg:mx-auto lg:mt-auto h-10"
-          //
-          className="absolute bg-black/75 aspect-square h-10 right-0 rounded-full top-2 lg:top-auto lg:w-5/6 lg:bottom-2 mx-4 lg:rounded-lg lg:py-2 lg:hidden lg:group-hover:flex lg:justify-center lg:items-center"
           type="button"
+          variants={item}
+          className="absolute bg-black/75 aspect-square h-10 right-0 rounded-full top-2 lg:top-auto lg:w-5/6 lg:bottom-2 mx-4 lg:rounded-lg lg:py-2 lg:hidden lg:group-hover:flex lg:justify-center lg:items-center"
           onClick={() => {
             if (data) {
               if (currentBookmarkId) {
@@ -118,19 +141,21 @@ export default function Card<T>({
         <div className="flex flex-row gap-2  text-xs lg:text-sm text-white/70 ">
           <span className="group-hover:text-red-500">
             {type === "movie"
-              ? data?.release_date.slice(0, 4)
-              : data?.first_air_date.slice(0, 4)}
+              ? (data as MovieData).release_date.slice(0, 4)
+              : (data as TVShowData).first_air_date.slice(0, 4)}
           </span>
           <span className="group-hover:text-red-500">
-            {data?.original_language && data?.original_language}
+            {(data as MovieData | TVShowData)?.original_language}
           </span>
           <span className="group-hover:text-red-500">
-            {data?.adult && "18+"}
+            {(data as MovieData | TVShowData)?.adult && "18+"}
           </span>
         </div>
 
-        <span className=" text-white font-medium text-base lg:text-lg truncate group-hover:underline group-hover:text-red-500">
-          {type === "movie" ? data?.title : data?.name}
+        <span className="text-white font-medium text-base lg:text-lg truncate group-hover:underline group-hover:text-red-500">
+          {type === "movie"
+            ? (data as MovieData).title
+            : (data as TVShowData).name}
         </span>
       </Link>
     </motion.li>

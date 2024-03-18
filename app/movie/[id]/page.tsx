@@ -6,7 +6,7 @@ type Params = {
   };
 };
 
-export default function Page({ params }: Params) {
+export default function MoviePage({ params }: Params) {
   return (
     <>
       <ShowAndMovie movieId={params?.id} />

@@ -29,13 +29,14 @@ export default function CardList({ data, type }: CardProps) {
 
   return (
     <div className="mt-8">
-      <span className="text-2xl px-4">
+      <span className="text-2xl lg:text-4xl px-4">
         {type === "movie" ? "Movies" : "TV Shows"}
       </span>
 
       <ul className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 ">
         {data?.results?.map((movie) => (
           <Card
+            key={movie?.id}
             type={type}
             data={movie}
             getKey={(data) => data?.id?.toString()}

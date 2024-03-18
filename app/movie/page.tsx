@@ -16,7 +16,7 @@ import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import { FilterOptions, PopularMovies, MoviesData } from "@/types";
 import CardList from "@/components/CardList";
 
-export default function page() {
+export default function MoviesPage() {
   const parsedUser = useGetUsersInfo();
   const { getBookmarks } = useBookmarks();
   const { setBookmarks } = useContext(BookmarkContext);
@@ -80,7 +80,7 @@ export default function page() {
         setFilterOptions={setFilterOptions}
       />
       <div className="pl-4 my-4">
-        <span className="text-2xl">Popular Movies</span>
+        <span className="text-2xl lg:text-4xl">Popular Movies</span>
 
         <ScrollGrid
           type="movie"
