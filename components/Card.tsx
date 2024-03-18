@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Variants, motion } from "framer-motion";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
@@ -28,6 +29,10 @@ export default function Card<T>({
   const currentBookmarkId = bookmarks?.find(
     (bookmark) => bookmark?.movieId == getKey(data)
   );
+
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
+
+  console.log(isSmallDevice, "isSmallDevice");
 
   const list: Variants = {
     visible: {
@@ -65,7 +70,7 @@ export default function Card<T>({
     >
       <motion.div
         variants={list}
-        initial="hidden"
+        initial={!isSmallDevice && "hidden"}
         whileHover="visible"
         className="relative w-full h-full lg:flex lg:items-end"
       >
@@ -94,6 +99,7 @@ export default function Card<T>({
         </Link>
         <motion.button
           type="button"
+          // variants={!isSmallDevice ? item : undefined}
           variants={item}
           className="absolute bg-black/75 aspect-square h-10 right-0 rounded-full top-2 lg:top-auto lg:w-5/6 lg:bottom-2 mx-4 lg:rounded-lg lg:py-2 lg:hidden lg:group-hover:flex lg:justify-center lg:items-center"
           onClick={() => {
