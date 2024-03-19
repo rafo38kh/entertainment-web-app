@@ -60,6 +60,10 @@ export default function MoviesPage() {
     queryFn: api.getPopularMovies,
   });
 
+  if (isMoviesError) return <span>{moviesError?.message}</span>;
+
+  if (isPopularMoveiesError) return <span>{popularMoveiesError?.message}</span>;
+
   useEffect(() => {
     setFilterOptions((prevState) => ({
       ...prevState,
