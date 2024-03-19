@@ -60,7 +60,7 @@ export default function Home() {
   return (
     <>
       <div className="flex flex-col gap-8">
-        <div className="pl-4">
+        <div className="pl-4 [--duration:68s]">
           <span className="text-2xl lg:text-4xl">Upcoming</span>
 
           <ScrollGrid

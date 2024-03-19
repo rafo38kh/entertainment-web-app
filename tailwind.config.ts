@@ -8,6 +8,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        "carousel-move": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
+      },
       colors: {
         movieRed: "#FC4747",
         movieDarkBlue: "#10141E",
@@ -22,6 +28,7 @@ const config: Config = {
       animation: {
         "pulse-slow-3": "pulse 3s linear infinite",
         "pulse-slow-5": "pulse 5s linear infinite",
+        "carousel-move": "carousel-move var(--duration,80s) infinite",
       },
     },
   },
