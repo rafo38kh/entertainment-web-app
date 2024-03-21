@@ -14,6 +14,7 @@ type CardProps<T> = {
   type: "movie" | "tvshow";
   getKey: (data: T) => string;
   getPosterPath: (data: T) => string | undefined;
+  i: number;
 };
 
 export default function Card<T>({
@@ -21,6 +22,7 @@ export default function Card<T>({
   type,
   getKey,
   getPosterPath,
+  i,
 }: CardProps<T>) {
   const parsedUser = useGetUsersInfo();
   const { addBookmarks, removeBookmarks } = useBookmarks();
@@ -31,8 +33,6 @@ export default function Card<T>({
   );
 
   const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
-
-  console.log(isSmallDevice, "isSmallDevice");
 
   const list: Variants = {
     visible: {
@@ -62,11 +62,21 @@ export default function Card<T>({
     },
   };
 
+  const cardItemVariants: Variants = {
+    open: {
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 300, damping: 24 },
+    },
+    closed: { opacity: 0, y: 20, transition: { duration: 0.2 } },
+  };
+
   return (
     <motion.li
+      key={getKey(data)}
+      variants={cardItemVariants}
       whileHover={{ scale: 0.97 }}
       className="flex flex-col items-start group"
-      key={getKey(data)}
     >
       <motion.div
         variants={list}

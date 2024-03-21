@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Link from "next/link";
 import ScrollGridLoading from "./ScrollGridLoading";
 import { motion } from "framer-motion";
@@ -11,13 +12,29 @@ type ScrollGridProps = {
 };
 
 function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
+  const [currentX, setCurrentX] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  console.log(currentX, "currentX");
+  console.log(isHovered, "isHovered");
+
   if (isLoading) return <ScrollGridLoading />;
 
   return (
     <div className="overflow-clip">
-      <ul
+      <motion.ul
+        whileHover={{ scale: 1.02 }}
+        onHoverStart={(e) => {
+          setIsHovered(true);
+          setCurrentX(e.clientX);
+        }}
+        onHoverEnd={() => setIsHovered(false)}
+        initial={{ x: 0 }}
+        animate={isHovered ? { x: -currentX } : { x: -(258 * 20) }}
+        exit={{ x: 0 }}
+        transition={{ duration: isHovered ? 30 : 80 }}
         // className="flex gap-4 overflow-x-scroll no-scrollbar mt-4 py-4 animate-carousel-move "
-        className="flex gap-4 no-scrollbar mt-4 py-4 animate-carousel-move "
+        className="flex gap-4 no-scrollbar mt-4 py-4  "
       >
         {data?.map((el) => (
           <motion.li
@@ -98,7 +115,7 @@ function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
             </Link>
           </motion.li>
         ))}
-      </ul>
+      </motion.ul>
     </div>
   );
 }

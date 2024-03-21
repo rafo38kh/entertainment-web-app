@@ -7,6 +7,7 @@ import CardList from "@/components/CardList";
 import ScrollGrid from "@/components/ScrollGrid";
 
 import { PopularMovies, MoviesData, TVShowsData } from "@/types";
+import CardLoading from "@/components/CardLoading";
 
 export default function Home() {
   const initialFilterOptions = {
@@ -79,9 +80,17 @@ export default function Home() {
           />
         </div>
       </div>
+      {isMoviesLoading ? (
+        <CardLoading />
+      ) : (
+        <CardList type="movie" data={moveiesData} />
+      )}
 
-      <CardList type="movie" data={moveiesData} />
-      <CardList type="tvshow" data={tvShowData} />
+      {isTvShowLoading ? (
+        <CardLoading />
+      ) : (
+        <CardList type="tvshow" data={tvShowData} />
+      )}
     </>
   );
 }
