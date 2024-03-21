@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import ScrollGridLoading from "./ScrollGridLoading";
+// import { useMediaQuery } from "@uidotdev/usehooks";
+
 import { motion } from "framer-motion";
 
 import { MovieData, PopularMovies, TVData } from "@/types";
@@ -15,10 +17,9 @@ function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
   const [currentX, setCurrentX] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
-  console.log(currentX, "currentX");
-  console.log(isHovered, "isHovered");
-
   if (isLoading) return <ScrollGridLoading />;
+
+  // const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
 
   return (
     <div className="overflow-clip">
