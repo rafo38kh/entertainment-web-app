@@ -26,13 +26,33 @@ type Filters = {
   language: string;
 };
 
-axiosFetch.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  config.headers[
-    "Authorization"
-  ] = `Bearer ${process.env.NEXT_PUBLIC_API_AUTH}`;
+// axiosFetch.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+//   config.headers[
+//     "Authorization"
+//   ] = `Bearer ${process.env.NEXT_PUBLIC_API_AUTH}`;
 
-  return config;
-});
+//   return config;
+// });
+
+axiosFetch.interceptors.request.use(
+  (config) => {
+    const TMDB_API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+    config.params = {
+      ...config.params,
+      api_key: TMDB_API_KEY,
+    };
+    config.headers[
+      "Authorization"
+    ] = `Bearer ${process.env.NEXT_PUBLIC_API_AUTH}`;
+
+    console.log(config, "config");
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 const getGenres = async () => {
   const response = await axiosFetch.get<GenresData>(
