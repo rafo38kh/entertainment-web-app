@@ -26,33 +26,33 @@ type Filters = {
   language: string;
 };
 
-// axiosFetch.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-//   config.headers[
-//     "Authorization"
-//   ] = `Bearer ${process.env.NEXT_PUBLIC_API_AUTH}`;
+axiosFetch.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  config.headers[
+    "Authorization"
+  ] = `Bearer ${process.env.NEXT_PUBLIC_API_AUTH}`;
 
-//   return config;
-// });
+  return config;
+});
 
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+// const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
-axiosFetch.interceptors.request.use(
-  (config) => {
-    // config.params = {
-    //   ...config.params,
-    //   api_key: API_KEY,
-    // };
+// axiosFetch.interceptors.request.use(
+//   (config) => {
+//     // config.params = {
+//     //   ...config.params,
+//     //   api_key: API_KEY,
+//     // };
 
-    // console.log(config.url, "headers");
+//     // console.log(config.url, "headers");
 
-    config.headers["Authorization"] = `Bearer ${API_KEY}`;
+//     config.headers["Authorization"] = `Bearer ${API_KEY}`;
 
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
 
 const getGenres = async () => {
   const response = await axiosFetch.get<GenresData>(
