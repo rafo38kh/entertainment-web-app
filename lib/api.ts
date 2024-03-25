@@ -38,18 +38,14 @@ const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 axiosFetch.interceptors.request.use(
   (config) => {
-    config.params = {
-      ...config.params,
-      api_key: API_KEY,
-    };
+    // config.params = {
+    //   ...config.params,
+    //   api_key: API_KEY,
+    // };
 
-    console.log(config.url, "headers");
+    // console.log(config.url, "headers");
 
-    config.headers[
-      "Authorization"
-    ] = `Bearer ${process.env.NEXT_PUBLIC_API_AUTH}`;
-
-    console.log(config, "config");
+    config.headers["Authorization"] = `Bearer ${API_KEY}`;
 
     return config;
   },
@@ -60,29 +56,27 @@ axiosFetch.interceptors.request.use(
 
 const getGenres = async () => {
   const response = await axiosFetch.get<GenresData>(
-    `/genre/movie/list?language=en?api_key=${API_KEY}`
+    `/genre/movie/list?language=en`
   );
   return response.data;
 };
 
 const getMovies = async () => {
   const response = await axiosFetch.get<MoviesData>(
-    `/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc?api_key=${API_KEY}`
+    `/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc`
   );
   return response.data?.results;
 };
 
 const getMovie = async (id: string) => {
   const response = await axiosFetch.get<MovieData>(
-    `/movie/${id}?language=en-US?api_key=${API_KEY}`
+    `/movie/${id}?language=en-US`
   );
   return response.data;
 };
 
 const getMovieImages = async (id: number | undefined) => {
-  const response = await axiosFetch.get<MovieImages>(
-    `/movie/${id}/images?api_key=${API_KEY}`
-  );
+  const response = await axiosFetch.get<MovieImages>(`/movie/${id}/images`);
   return response.data;
 };
 
@@ -90,63 +84,59 @@ const getTvShows = async () => {
   const response = await axiosFetch.get<{
     results: TVData[];
   }>(
-    `/discover/tv?include_adult=false&include_null_first_air_dates=false&language=en-US&page=1&sort_by=popularity.desc?api_key=${API_KEY}`
+    `/discover/tv?include_adult=false&include_null_first_air_dates=false&language=en-US&page=1&sort_by=popularity.desc`
   );
   return response.data?.results;
 };
 
 const getTvShow = async (id: string) => {
-  const response = await axiosFetch.get<TVShowData>(
-    `/tv/${id}?language=en-US?api_key=${API_KEY}`
-  );
+  const response = await axiosFetch.get<TVShowData>(`/tv/${id}?language=en-US`);
   return response.data;
 };
 
 const getTVShowImages = async (id: number | undefined) => {
-  const response = await axiosFetch.get<TVShowImages>(
-    `/tv/${id}/images?api_key=${API_KEY}`
-  );
+  const response = await axiosFetch.get<TVShowImages>(`/tv/${id}/images`);
   return response.data;
 };
 
 const getPopularMovies = async () => {
   const response = await axiosFetch.get<{ results: PopularMovies[] }>(
-    `movie/popular?language=en-US&page=1?api_key=${API_KEY}`
+    `movie/popular?language=en-US&page=1`
   );
   return response.data?.results;
 };
 
 const getUpcomingMovies = async () => {
   const response = await axiosFetch.get<{ results: PopularMovies[] }>(
-    `movie/upcoming?language=en-US&page=1?api_key=${API_KEY}`
+    `movie/upcoming?language=en-US&page=1`
   );
   return response.data?.results;
 };
 
 const getNowPlayingMovies = async () => {
   const response = await axiosFetch.get<{ results: PopularMovies[] }>(
-    `movie/now_playing?language=en-US&page=1?api_key=${API_KEY}`
+    `movie/now_playing?language=en-US&page=1`
   );
   return response.data?.results;
 };
 
 const getOnTheAir = async () => {
   const response = await axiosFetch.get<{ results: TVData[] }>(
-    `tv/on_the_air?language=en-US&page=1?api_key=${API_KEY}`
+    `tv/on_the_air?language=en-US&page=1`
   );
   return response.data?.results || [];
 };
 
 const getMovieGeneres = async () => {
   const response = await axiosFetch.get<GenresData>(
-    `/genre/movie/list?language=en?api_key=${API_KEY}`
+    `/genre/movie/list?language=en`
   );
   return response.data?.genres || [];
 };
 
 const getMovieLanguages = async () => {
   const response = await axiosFetch.get<Languages[]>(
-    `/configuration/languages?api_key=${API_KEY}`
+    `/configuration/languages`
   );
   return response?.data || [];
 };
@@ -160,7 +150,7 @@ const getMovieTeasers = async (movieType: string, id: number | undefined) => {
 
 const multiSearch = async (query: string) => {
   const response = await axiosFetch.get<{ results: MultiSearchData[] }>(
-    `search/multi?query=${query}&include_adult=true&language=en-US&page=1?api_key=${API_KEY}`
+    `search/multi?query=${query}&include_adult=true&language=en-US&page=1`
   );
   return response.data?.results;
 };
@@ -176,7 +166,7 @@ const getFilteredMovies = async ({
     const queryString =
       genre != null
         ? `discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&primary_release_year=${year}&sort_by=popularity.desc&with_genres=${genre}`
-        : `/discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&sort_by=popularity.desc&year=${year}?api_key=${API_KEY}`;
+        : `/discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&sort_by=popularity.desc&year=${year}`;
 
     const response = await axiosFetch.get<MoviesData>(queryString);
 
@@ -198,7 +188,7 @@ const getFilteredShows = async ({
     const queryString =
       genre != null
         ? `discover/tv?first_air_date_year=${year}&include_adult=${adult}&include_null_first_air_dates=false&language=${language}&page=${page}&sort_by=popularity.desc&without_genres=${genre}`
-        : `/discover/tv?include_adult=${adult}&include_null_first_air_dates=false&language=${language}&page=${page}&sort_by=popularity.desc&year=${year}?api_key=${API_KEY}`;
+        : `/discover/tv?include_adult=${adult}&include_null_first_air_dates=false&language=${language}&page=${page}&sort_by=popularity.desc&year=${year}`;
 
     const response = await axiosFetch.get<TVShowsData>(queryString);
 
