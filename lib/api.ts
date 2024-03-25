@@ -37,26 +37,6 @@ axiosFetch.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 console.log("API Key:", process.env.NEXT_PUBLIC_API_KEY);
 console.log("API Auth:", process.env.NEXT_PUBLIC_API_AUTH);
 
-// const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
-
-// axiosFetch.interceptors.request.use(
-//   (config) => {
-//     // config.params = {
-//     //   ...config.params,
-//     //   api_key: API_KEY,
-//     // };
-
-//     // console.log(config.url, "headers");
-
-//     config.headers["Authorization"] = `Bearer ${API_KEY}`;
-
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
-
 const getGenres = async () => {
   const response = await axiosFetch.get<GenresData>(
     `/genre/movie/list?language=en`
