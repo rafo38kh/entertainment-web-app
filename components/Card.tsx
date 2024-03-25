@@ -14,7 +14,6 @@ type CardProps<T> = {
   type: "movie" | "tvshow";
   getKey: (data: T) => string;
   getPosterPath: (data: T) => string | undefined;
-  i: number;
 };
 
 export default function Card<T>({
@@ -22,7 +21,6 @@ export default function Card<T>({
   type,
   getKey,
   getPosterPath,
-  i,
 }: CardProps<T>) {
   const parsedUser = useGetUsersInfo();
   const { addBookmarks, removeBookmarks } = useBookmarks();

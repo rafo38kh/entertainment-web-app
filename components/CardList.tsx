@@ -61,9 +61,8 @@ export default function CardList({ data, type }: CardProps) {
         // animate={{ opacity: 1, transition: { duration: 0.5 } }}
         className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 "
       >
-        {data?.results?.map((movie, i) => (
+        {data?.results?.map((movie) => (
           <Card
-            i={i}
             key={movie?.id}
             type={type}
             data={movie}
