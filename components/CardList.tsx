@@ -55,8 +55,8 @@ export default function CardList({ data, type }: CardProps) {
 
       <motion.ul
         variants={list}
-        animate="open" // Always animate to open after mounting
-        initial={"closed"} // Initially closed if not mounted
+        animate="open"
+        initial={"closed"}
         // initial={{ opacity: 0 }}
         // animate={{ opacity: 1, transition: { duration: 0.5 } }}
         className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 "
