@@ -101,28 +101,28 @@ const getTVShowImages = async (id: number | undefined) => {
 
 const getPopularMovies = async () => {
   const response = await axiosFetch.get<{ results: PopularMovies[] }>(
-    `movie/popular?language=en-US&page=1`
+    `/movie/popular?language=en-US&page=1`
   );
   return response.data?.results;
 };
 
 const getUpcomingMovies = async () => {
   const response = await axiosFetch.get<{ results: PopularMovies[] }>(
-    `movie/upcoming?language=en-US&page=1`
+    `/movie/upcoming?language=en-US&page=1`
   );
   return response.data?.results;
 };
 
 const getNowPlayingMovies = async () => {
   const response = await axiosFetch.get<{ results: PopularMovies[] }>(
-    `movie/now_playing?language=en-US&page=1`
+    `/movie/now_playing?language=en-US&page=1`
   );
   return response.data?.results;
 };
 
 const getOnTheAir = async () => {
   const response = await axiosFetch.get<{ results: TVData[] }>(
-    `tv/on_the_air?language=en-US&page=1`
+    `/tv/on_the_air?language=en-US&page=1`
   );
   return response.data?.results || [];
 };
@@ -144,13 +144,13 @@ const getMovieLanguages = async () => {
 const getMovieTeasers = async (movieType: string, id: number | undefined) => {
   const response = await axiosFetch.get<{
     results: { type: string; key: string }[];
-  }>(`${movieType}/${id}/videos?language=en-US`);
+  }>(`/${movieType}/${id}/videos?language=en-US`);
   return response?.data || [];
 };
 
 const multiSearch = async (query: string) => {
   const response = await axiosFetch.get<{ results: MultiSearchData[] }>(
-    `search/multi?query=${query}&include_adult=true&language=en-US&page=1`
+    `/search/multi?query=${query}&include_adult=true&language=en-US&page=1`
   );
   return response.data?.results;
 };
@@ -165,7 +165,7 @@ const getFilteredMovies = async ({
   try {
     const queryString =
       genre != null
-        ? `discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&primary_release_year=${year}&sort_by=popularity.desc&with_genres=${genre}`
+        ? `/discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&primary_release_year=${year}&sort_by=popularity.desc&with_genres=${genre}`
         : `/discover/movie?include_adult=${adult}&include_video=false&language=${language}&page=${page}&sort_by=popularity.desc&year=${year}`;
 
     const response = await axiosFetch.get<MoviesData>(queryString);
@@ -187,7 +187,7 @@ const getFilteredShows = async ({
   try {
     const queryString =
       genre != null
-        ? `discover/tv?first_air_date_year=${year}&include_adult=${adult}&include_null_first_air_dates=false&language=${language}&page=${page}&sort_by=popularity.desc&without_genres=${genre}`
+        ? `/discover/tv?first_air_date_year=${year}&include_adult=${adult}&include_null_first_air_dates=false&language=${language}&page=${page}&sort_by=popularity.desc&without_genres=${genre}`
         : `/discover/tv?include_adult=${adult}&include_null_first_air_dates=false&language=${language}&page=${page}&sort_by=popularity.desc&year=${year}`;
 
     const response = await axiosFetch.get<TVShowsData>(queryString);
