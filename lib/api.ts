@@ -34,6 +34,9 @@ axiosFetch.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 
+console.log("API Key:", process.env.NEXT_PUBLIC_API_KEY);
+console.log("API Auth:", process.env.NEXT_PUBLIC_API_AUTH);
+
 // const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 // axiosFetch.interceptors.request.use(
