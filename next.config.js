@@ -1,14 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // publicRuntimeConfig: {
-  //   // Define your environment variables here
-  //   NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,
-  //   NEXT_PUBLIC_API_AUTH: process.env.NEXT_PUBLIC_API_AUTH,
-  // },s
-  env: {
+  publicRuntimeConfig: {
+    // Define your environment variables here
     NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,
     NEXT_PUBLIC_API_AUTH: process.env.NEXT_PUBLIC_API_AUTH,
   },
+  // env: {
+  //   NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,
+  //   NEXT_PUBLIC_API_AUTH: process.env.NEXT_PUBLIC_API_AUTH,
+  // },
   images: {
     remotePatterns: [
       {
