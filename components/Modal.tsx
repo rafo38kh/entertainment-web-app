@@ -15,6 +15,7 @@ import Image from "next/image";
 import useOutsideClick from "@/hooks/useOutsideClick";
 
 import { MovieImages, TVShowImages } from "@/types";
+import { hoverEffect } from "@/animations";
 
 type ModalProps = {
   maxLegnth: number;
@@ -24,27 +25,6 @@ type ModalProps = {
   tvShowImages: TVShowImages | undefined;
   setImageIndex: Dispatch<SetStateAction<number>>;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
-};
-
-const variants = {
-  enter: (direction: number) => {
-    return {
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0,
-    };
-  },
-  center: {
-    zIndex: 1,
-    x: 0,
-    opacity: 1,
-  },
-  exit: (direction: number) => {
-    return {
-      zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0,
-    };
-  },
 };
 
 const swipeConfidenceThreshold = 10000;
@@ -64,9 +44,43 @@ export default function Modal({
   const emptyArray = Array.from({ length: maxLegnth }, () => Math.random());
   const [mounted, setMounted] = useState(false);
 
-  const [[page, direction], setPage] = useState([0, 0]);
+  const [[page], setPage] = useState([0, 0]);
+  const [direction, setDirection] = useState(0);
+
   const paginate = (newDirection: number) => {
     setPage([page + newDirection, newDirection]);
+  };
+
+  const variants = {
+    initial: (direction: number) => {
+      return {
+        x: direction > 0 ? 1000 : -1000,
+        opacity: 0,
+        // scale: 0.5,
+      };
+    },
+    animate: {
+      x: 0,
+      opacity: 1,
+      // scale: 1,
+      // transition: "ease-in",
+      transition: {
+        x: { type: "spring", stiffness: 300, damping: 30 },
+        opacity: { duration: 0.2 },
+      },
+    },
+    exit: (direction: number) => {
+      return {
+        x: direction > 0 ? -1000 : 1000,
+        opacity: 0,
+        // scale: 0.5,
+        // transition: 'ease-in',
+        transition: {
+          x: { type: "spring", stiffness: 300, damping: 30 },
+          opacity: { duration: 0.2 },
+        },
+      };
+    },
   };
 
   const pathname = usePathname();
@@ -77,13 +91,15 @@ export default function Modal({
     setIsModalOpen(false)
   ) as RefObject<HTMLDivElement>;
 
-  const handlePastImage = (index: number) => {
+  const handlePreviousImage = (index: number) => {
+    setDirection(-1);
     if (imageIndex === 0) {
       setImageIndex(maxLegnth - 1);
     } else setImageIndex(imageIndex - 1);
   };
 
-  const handlePreviousImage = (index: number) => {
+  const handleNextImage = (index: number) => {
+    setDirection(1);
     if (imageIndex === maxLegnth - 1) {
       setImageIndex(0);
     } else setImageIndex(imageIndex + 1);
@@ -92,14 +108,22 @@ export default function Modal({
   return mounted
     ? createPortal(
         <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-4 lg:px-8">
-          <AnimatePresence initial={false} custom={direction}>
-            {isModalOpen && (
+          {isModalOpen && (
+            <AnimatePresence custom={direction}>
               <div
                 ref={ref}
                 className="w-full flex flex-col gap-2 items-center"
               >
-                <div className="flex flex-row justify-center items-center w-full">
-                  <button onClick={() => handlePastImage(imageIndex)}>
+                <div
+                  className="relative"
+                  // className="flex flex-row justify-center items-center w-full px-4"
+                >
+                  <motion.button
+                    whileHover={hoverEffect.whileHover}
+                    transition={hoverEffect.transition}
+                    onClick={() => handlePreviousImage(imageIndex)}
+                    className="absolute left-2 top-2/4 p-2 rounded-full bg-black/35"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -114,39 +138,49 @@ export default function Modal({
                         d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
                       />
                     </svg>
-                  </button>
+                  </motion.button>
+
                   {pathname.includes("/movie") && (
                     <motion.img
+                      variants={variants}
+                      animate="animate"
+                      initial="initial"
+                      exit="exit"
+                      key={imageIndex}
+                      custom={direction}
+                      width={movieImages?.backdrops[imageIndex]?.width || 100}
+                      height={
+                        movieImages?.backdrops[imageIndex]?.height || 1500
+                      }
+                      className="w-full h-full rounded-lg max-w-[80rem]"
+                      alt={`https://image.tmdb.org/t/p/original${
+                        movieImages?.backdrops?.slice(0, 6)[imageIndex]
+                          ?.file_path
+                      }`}
                       src={`https://image.tmdb.org/t/p/original${
                         movieImages?.backdrops?.slice(0, 6)[imageIndex]
                           ?.file_path
                       }`}
-                      custom={direction}
-                      variants={variants}
-                      initial="enter"
-                      animate="center"
-                      exit="exit"
-                      transition={{
-                        x: { type: "spring", stiffness: 300, damping: 30 },
-                        opacity: { duration: 0.2 },
-                      }}
-                      drag="x"
-                      dragConstraints={{ left: 0, right: 0 }}
-                      dragElastic={1}
-                      onDragEnd={(e, { offset, velocity }) => {
-                        const swipe = swipePower(offset.x, velocity.x);
+                      // onDragEnd={(e, { offset, velocity }) => {
+                      //   const swipe = swipePower(offset.x, velocity.x);
 
-                        if (swipe < -swipeConfidenceThreshold) {
-                          paginate(1);
-                        } else if (swipe > swipeConfidenceThreshold) {
-                          paginate(-1);
-                        }
-                      }}
+                      //   if (swipe < -swipeConfidenceThreshold) {
+                      //     paginate(1);
+                      //   } else if (swipe > swipeConfidenceThreshold) {
+                      //     paginate(-1);
+                      //   }
+                      // }}
                     />
                   )}
 
                   {pathname.includes("/tvshow") && (
-                    <Image
+                    <motion.img
+                      variants={variants}
+                      animate="animate"
+                      initial="initial"
+                      exit="exit"
+                      key={imageIndex}
+                      custom={direction}
                       className="w-full h-full rounded-lg"
                       width={tvShowImages?.backdrops[imageIndex]?.width || 1000}
                       height={
@@ -160,7 +194,12 @@ export default function Modal({
                     />
                   )}
 
-                  <button onClick={() => handlePreviousImage(imageIndex)}>
+                  <motion.button
+                    whileHover={hoverEffect.whileHover}
+                    transition={hoverEffect.transition}
+                    onClick={() => handleNextImage(imageIndex)}
+                    className="absolute right-2 top-2/4 p-2 rounded-full bg-black/35"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -175,15 +214,15 @@ export default function Modal({
                         d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
                       />
                     </svg>
-                  </button>
+                  </motion.button>
                 </div>
 
                 <ul className="flex flex-row gap-2">
                   {emptyArray?.map((_, index) => (
                     <motion.button
-                      whileHover={{ scale: 1.5 }}
-                      transition={{ ease: "easeOut", duration: 0.2 }}
                       key={index}
+                      whileHover={hoverEffect.whileHover}
+                      transition={hoverEffect.transition}
                       className={`p-1  rounded-full ${
                         index === imageIndex
                           ? "bg-movieGreyishBlue"
@@ -194,9 +233,10 @@ export default function Modal({
                   ))}
                 </ul>
               </div>
-            )}
-          </AnimatePresence>
+            </AnimatePresence>
+          )}
         </div>,
+
         document.body
       )
     : null;

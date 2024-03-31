@@ -381,7 +381,12 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
               <span>Gallery</span>
               <ul className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {images?.backdrops?.slice(0, 6)?.map((backdrop, index) => (
-                  <li key={backdrop?.file_path}>
+                  <motion.li
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1, transition: { duration: 3 } }}
+                    className="w-full h-full"
+                    key={backdrop?.file_path}
+                  >
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       aria-label={backdrop.file_path}
@@ -396,7 +401,7 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
                         src={`https://image.tmdb.org/t/p/original${backdrop?.file_path}`}
                       />
                     </motion.button>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             </div>

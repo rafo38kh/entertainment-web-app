@@ -10,8 +10,8 @@ import { AuthContext } from "@/contexts/AuthContextProvider";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 
 export default function Navigation() {
-  const parsedUser = useGetUsersInfo();
   const pathname = usePathname();
+  const parsedUser = useGetUsersInfo();
   const { isAuth, signInWithGoogle, logOut } = useContext(AuthContext);
 
   const [isSignOutShowing, setIsSignOutShowing] = useState(false);
@@ -68,35 +68,46 @@ export default function Navigation() {
         </svg>
         {isOpenNav && <span>SIGIZMUND</span>}
       </Link>
-      {/*  */}
+
       <div
         className={`flex flex-row justify-center gap-4 lg:flex-col ${
           isOpenNav ? "items-start" : "items-center"
         }`}
       >
-        {menuItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="flex flex-row items-center justify-center gap-2"
-          >
-            <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d={item.svgPath}
-                fill={pathname === item.href ? "#cacfd9" : "#5A698F"}
-              />
-            </svg>
-            {isOpenNav && (
-              <span
-                className={`${
-                  pathname === item.href ? "text-[#cacfd9]" : "text-[#5A698F]"
-                }`}
-              >
-                {item.label}
-              </span>
-            )}
-          </Link>
-        ))}
+        {menuItems.map((item) => {
+          const isActiveLink = (href: string) => {
+            if (href === "/") {
+              return pathname === "/";
+            }
+            return pathname.startsWith(href);
+          };
+
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="flex flex-row items-center justify-center gap-2"
+            >
+              <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d={item.svgPath}
+                  fill={isActiveLink(item?.href) ? "#cacfd9" : "#5A698F"}
+                />
+              </svg>
+              {isOpenNav && (
+                <span
+                  className={`${
+                    isActiveLink(item?.href)
+                      ? "text-[#cacfd9]"
+                      : "text-[#5A698F]"
+                  }`}
+                >
+                  {item.label}
+                </span>
+              )}
+            </Link>
+          );
+        })}
       </div>
       <div className="flex flex-col items-center justify-center gap-4">
         <button

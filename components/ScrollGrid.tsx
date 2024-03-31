@@ -1,9 +1,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import ScrollGridLoading from "./ScrollGridLoading";
-// import { useMediaQuery } from "@uidotdev/usehooks";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 import { motion } from "framer-motion";
+
+import {
+  list,
+  cardItemVariants,
+  scrolGridListVarints,
+} from "@/animations/index";
 
 import { MovieData, PopularMovies, TVData } from "@/types";
 
@@ -14,32 +20,33 @@ type ScrollGridProps = {
 };
 
 function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
   const [currentX, setCurrentX] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
   if (isLoading) return <ScrollGridLoading />;
 
-  // const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
-
   return (
-    <div className="overflow-clip">
+    <motion.div variants={list} className="py-4 overflow-clip">
       <motion.ul
-        whileHover={{ scale: 1.02 }}
+        animate="animate"
+        initial="initial"
         onHoverStart={(e) => {
           setIsHovered(true);
           setCurrentX(e.clientX);
         }}
         onHoverEnd={() => setIsHovered(false)}
-        initial={{ x: 0 }}
-        animate={isHovered ? { x: -currentX } : { x: -(258 * 20) }}
-        exit={{ x: 0 }}
-        transition={{ duration: isHovered ? 30 : 80 }}
-        // className="flex gap-4 overflow-x-scroll no-scrollbar mt-4 py-4 animate-carousel-move "
-        className="flex gap-4 no-scrollbar mt-4 py-4  "
+        variants={
+          isSmallDevice ? undefined : scrolGridListVarints(isHovered, currentX)
+        }
+        className={`flex gap-4 no-scrollbar mt-4 ${
+          isSmallDevice ? "overflow-x-scroll" : null
+        }`}
       >
         {data?.map((el) => (
           <motion.li
             key={el?.id}
+            variants={cardItemVariants}
             className="border-solid border-2 border-transparent rounded-lg"
             whileHover={{
               scale: 1.05,
@@ -117,7 +124,7 @@ function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
           </motion.li>
         ))}
       </motion.ul>
-    </div>
+    </motion.div>
   );
 }
 

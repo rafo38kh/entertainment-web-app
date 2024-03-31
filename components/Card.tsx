@@ -1,13 +1,14 @@
 import React, { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Variants, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useMediaQuery } from "@uidotdev/usehooks";
 
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
 import { BookmarkContext } from "@/contexts/BookmarksContextProvider";
 import { MovieData, TVShowData } from "@/types";
+import { cardItemVariants, cardList, cardItem } from "@/animations/index";
 
 type CardProps<T> = {
   data: T;
@@ -32,43 +33,6 @@ export default function Card<T>({
 
   const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
 
-  const list: Variants = {
-    visible: {
-      transition: {
-        when: "beforeChildren",
-        staggerChildren: 0.1,
-      },
-    },
-    hidden: {
-      transition: {
-        when: "afterChildren",
-      },
-    },
-  };
-
-  const item: Variants = {
-    visible: {
-      y: 0,
-      opacity: 1,
-    },
-    hidden: {
-      y: 5,
-      opacity: 0,
-      transition: {
-        delay: 0.1,
-      },
-    },
-  };
-
-  const cardItemVariants: Variants = {
-    open: {
-      opacity: 1,
-      y: 0,
-      transition: { type: "spring", stiffness: 300, damping: 24 },
-    },
-    closed: { opacity: 0, y: 20, transition: { duration: 0.2 } },
-  };
-
   return (
     <motion.li
       key={getKey(data)}
@@ -77,7 +41,7 @@ export default function Card<T>({
       className="flex flex-col items-start group"
     >
       <motion.div
-        variants={list}
+        variants={cardList}
         initial={!isSmallDevice && "hidden"}
         whileHover="visible"
         className="relative w-full h-full lg:flex lg:items-end"
@@ -108,7 +72,7 @@ export default function Card<T>({
         <motion.button
           type="button"
           // variants={!isSmallDevice ? item : undefined}
-          variants={item}
+          variants={cardItem}
           className="absolute bg-black/75 aspect-square h-10 right-0 rounded-full top-2 lg:top-auto lg:w-5/6 lg:bottom-2 mx-4 lg:rounded-lg lg:py-2 lg:hidden lg:group-hover:flex lg:justify-center lg:items-center"
           onClick={() => {
             if (data) {

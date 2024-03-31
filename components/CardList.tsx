@@ -1,11 +1,13 @@
 import { useContext, useEffect } from "react";
-import { Variants, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { AuthContext } from "@/contexts/AuthContextProvider";
 import { BookmarkContext } from "@/contexts/BookmarksContextProvider";
 
 import { useBookmarks } from "@/hooks/useBookmarks";
 import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
+
+import { list } from "@/animations/index";
 
 import Card from "./Card";
 
@@ -28,25 +30,6 @@ export default function CardList({ data, type }: CardProps) {
     }
   }, [isAuth]);
 
-  const list: Variants = {
-    open: {
-      transition: {
-        bounce: 0,
-        duration: 0.7,
-        type: "spring",
-        delayChildren: 0.3,
-        staggerChildren: 0.05,
-      },
-    },
-    closed: {
-      transition: {
-        bounce: 0,
-        duration: 0.3,
-        type: "spring",
-      },
-    },
-  };
-
   return (
     <div className="mt-8">
       <span className="text-2xl lg:text-4xl px-4">
@@ -54,18 +37,16 @@ export default function CardList({ data, type }: CardProps) {
       </span>
 
       <motion.ul
-        variants={list}
         animate="open"
-        initial={"closed"}
-        // initial={{ opacity: 0 }}
-        // animate={{ opacity: 1, transition: { duration: 0.5 } }}
+        variants={list}
+        initial="closed"
         className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4 "
       >
         {data?.results?.map((movie) => (
           <Card
-            key={movie?.id}
             type={type}
             data={movie}
+            key={movie?.id}
             getKey={(data) => data?.id?.toString()}
             getPosterPath={(data) => {
               return data?.poster_path;
