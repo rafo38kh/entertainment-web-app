@@ -24,7 +24,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body
-        className={`lg:h-[calc(100vh_-_2rem)] lg:w-full lg:overflow-y-scroll lg:gap-4 lg:p-4 lg:justify-center lg:grid lg:grid-cols-[auto_1fr]  bg-movieDarkBlue text-white ${outfit.className}`}
+        className={`lg:h-[calc(100vh_-_2rem)] lg:w-full lg:overflow-y-scroll lg:gap-4 lg:p-4 lg:justify-center lg:grid lg:grid-cols-[auto_1fr] relative bg-movieDarkBlue text-white ${outfit.className}`}
       >
         <Providers>
           <div className="lg:hidden">

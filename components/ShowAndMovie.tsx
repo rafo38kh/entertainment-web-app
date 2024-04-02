@@ -15,6 +15,8 @@ import Modal from "@/components/Modal";
 
 import { MovieData, MovieImages, TVShowData, TVShowImages } from "@/types";
 import { useBookmarks } from "@/hooks/useBookmarks";
+import BookmarkModal from "./BookmarkModal";
+import { AuthContext } from "@/contexts/AuthContextProvider";
 
 type TVMoiveProps = {
   tvShowId?: string;
@@ -22,11 +24,20 @@ type TVMoiveProps = {
 };
 
 export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
+  const { isAuth } = useContext(AuthContext);
+  const { bookmarks, setBookmarks } = useContext(BookmarkContext);
+
+  const parsedUser = useGetUsersInfo();
+  const { getBookmarks, addBookmarks, removeBookmarks } = useBookmarks();
+
   const [imageIndex, setImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { getBookmarks, addBookmarks, removeBookmarks } = useBookmarks();
-  const { bookmarks, setBookmarks } = useContext(BookmarkContext);
-  const parsedUser = useGetUsersInfo();
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsSignInModalOpen(true);
+    document.body.classList.add("modal-open");
+  };
 
   const {
     data: movieData,
@@ -194,6 +205,10 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
               className="bg-black/35 flex items-center justify-center p-3 w-full rounded-lg md:col-start-1 md:col-end-3 lg:text-2xl"
               type="button"
               onClick={() => {
+                if (!isAuth) {
+                  openModal();
+                }
+
                 if (currentBookmarkId) {
                   removeBookmarks(currentBookmarkId);
                 } else {
@@ -384,7 +399,7 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
                   <motion.li
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1, transition: { duration: 3 } }}
-                    className="w-full h-full"
+                    className="min-w-[11.875rem] min-h-[7.0625rem]"
                     key={backdrop?.file_path}
                   >
                     <motion.button
@@ -419,6 +434,10 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
           setImageIndex={setImageIndex}
           setIsModalOpen={setIsModalOpen}
         />
+      )}
+
+      {isSignInModalOpen && (
+        <BookmarkModal setIsSignInModalOpen={setIsSignInModalOpen} />
       )}
     </>
   );

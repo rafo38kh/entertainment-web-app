@@ -72,7 +72,7 @@ export const scrolGridListVarints = (
   },
   animate: {
     x: isHovered ? -currentX : -(258 * 20),
-    transition: { delay: !isHovered ? 1.5 : 0, duration: isHovered ? 100 : 80 },
+    transition: { delay: !isHovered ? 0.5 : 0, duration: isHovered ? 100 : 80 },
   },
 });
 

@@ -7,7 +7,7 @@ export default function SignIn() {
   const { signInWithGoogle } = useContext(AuthContext);
 
   return (
-    <div className="flex justify-center items-center h-full flex-1 p-4 overflow-hidden">
+    <div className="flex justify-center items-center h-full flex-1  overflow-hidden">
       <div className="bg-semiDarkBlue w-72 aspect-square rounded-lg flex flex-col justify-center items-center gap-8">
         <svg
           version="1.1"

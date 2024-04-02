@@ -10,7 +10,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { createPortal } from "react-dom";
 
 import { usePathname } from "next/navigation";
-import Image from "next/image";
 
 import useOutsideClick from "@/hooks/useOutsideClick";
 
@@ -109,20 +108,20 @@ export default function Modal({
     ? createPortal(
         <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-4 lg:px-8">
           {isModalOpen && (
-            <AnimatePresence custom={direction}>
+            <AnimatePresence initial={false} custom={direction}>
               <div
                 ref={ref}
                 className="w-full flex flex-col gap-2 items-center"
               >
                 <div
-                  className="relative"
-                  // className="flex flex-row justify-center items-center w-full px-4"
+                  // className="relative"
+                  className="flex flex-row justify-center lg:gap-8 items-center w-full "
                 >
                   <motion.button
                     whileHover={hoverEffect.whileHover}
                     transition={hoverEffect.transition}
                     onClick={() => handlePreviousImage(imageIndex)}
-                    className="absolute left-2 top-2/4 p-2 rounded-full bg-black/35"
+                    className="lg:p-2 rounded-full bg-black/35"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -198,7 +197,7 @@ export default function Modal({
                     whileHover={hoverEffect.whileHover}
                     transition={hoverEffect.transition}
                     onClick={() => handleNextImage(imageIndex)}
-                    className="absolute right-2 top-2/4 p-2 rounded-full bg-black/35"
+                    className="lg:p-2 rounded-full bg-black/35"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
