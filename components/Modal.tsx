@@ -55,14 +55,11 @@ export default function Modal({
       return {
         x: direction > 0 ? 1000 : -1000,
         opacity: 0,
-        // scale: 0.5,
       };
     },
     animate: {
       x: 0,
       opacity: 1,
-      // scale: 1,
-      // transition: "ease-in",
       transition: {
         x: { type: "spring", stiffness: 300, damping: 30 },
         opacity: { duration: 0.2 },
@@ -72,8 +69,6 @@ export default function Modal({
       return {
         x: direction > 0 ? -1000 : 1000,
         opacity: 0,
-        // scale: 0.5,
-        // transition: 'ease-in',
         transition: {
           x: { type: "spring", stiffness: 300, damping: 30 },
           opacity: { duration: 0.2 },
@@ -113,10 +108,7 @@ export default function Modal({
                 ref={ref}
                 className="w-full flex flex-col gap-2 items-center"
               >
-                <div
-                  // className="relative"
-                  className="flex flex-row justify-center lg:gap-8 items-center w-full "
-                >
+                <div className="flex flex-row justify-center lg:gap-8 items-center w-full ">
                   <motion.button
                     whileHover={hoverEffect.whileHover}
                     transition={hoverEffect.transition}
@@ -147,6 +139,12 @@ export default function Modal({
                       exit="exit"
                       key={imageIndex}
                       custom={direction}
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto",
+                        objectFit: "cover",
+                      }}
+                      loading="lazy"
                       width={movieImages?.backdrops[imageIndex]?.width || 100}
                       height={
                         movieImages?.backdrops[imageIndex]?.height || 1500
@@ -160,15 +158,6 @@ export default function Modal({
                         movieImages?.backdrops?.slice(0, 6)[imageIndex]
                           ?.file_path
                       }`}
-                      // onDragEnd={(e, { offset, velocity }) => {
-                      //   const swipe = swipePower(offset.x, velocity.x);
-
-                      //   if (swipe < -swipeConfidenceThreshold) {
-                      //     paginate(1);
-                      //   } else if (swipe > swipeConfidenceThreshold) {
-                      //     paginate(-1);
-                      //   }
-                      // }}
                     />
                   )}
 

@@ -49,6 +49,7 @@ export default function CardList({ data, type }: CardProps) {
             key={movie?.id}
             getKey={(data) => data?.id?.toString()}
             getPosterPath={(data) => {
+              2;
               return data?.poster_path;
             }}
           />

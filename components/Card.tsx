@@ -61,10 +61,10 @@ export default function Card<T>({
           <Link href={`/${type}/${getKey(data)}`}>
             {getPosterPath(data) ? (
               <Image
-                className="w-full rounded-lg h-full"
                 width={1000}
                 height={100}
                 alt={getPosterPath(data) || ""}
+                className="w-full rounded-lg h-full"
                 src={`https://image.tmdb.org/t/p/original${getPosterPath(
                   data
                 )}`}
@@ -106,29 +106,26 @@ export default function Card<T>({
               }
             }}
           >
-            {currentBookmarkId ? (
-              <div className="flex justify-center items-center gap-2">
-                <span className="hidden lg:inline-block">Bookmarked</span>
-                <svg width="12" height="14" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M10.61 0c.14 0 .273.028.4.083a1.03 1.03 0 0 1 .657.953v11.928a1.03 1.03 0 0 1-.656.953c-.116.05-.25.074-.402.074-.291 0-.543-.099-.756-.296L5.833 9.77l-4.02 3.924c-.218.203-.47.305-.756.305a.995.995 0 0 1-.4-.083A1.03 1.03 0 0 1 0 12.964V1.036A1.03 1.03 0 0 1 .656.083.995.995 0 0 1 1.057 0h9.552Z"
-                    fill="#FFF"
-                  />
-                </svg>
-              </div>
-            ) : (
-              <div className="flex justify-center items-center gap-2">
-                <span className="hidden lg:inline-block">Bookmark</span>
-                <svg width="12" height="14" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="m10.518.75.399 12.214-5.084-4.24-4.535 4.426L.75 1.036l9.768-.285Z"
-                    stroke="#FFF"
-                    strokeWidth="1.5"
-                    fill="none"
-                  />
-                </svg>
-              </div>
-            )}
+            <div className="flex justify-center items-center gap-2">
+              <span className="hidden lg:inline-block">
+                {currentBookmarkId ? "Bookmarked" : "Bookmark"}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
+                  fill={currentBookmarkId ? "#fff" : "none"}
+                />
+              </svg>
+            </div>
           </motion.button>
         </motion.div>
 
