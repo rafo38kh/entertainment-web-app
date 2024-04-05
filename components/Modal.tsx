@@ -26,11 +26,6 @@ type ModalProps = {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const swipeConfidenceThreshold = 10000;
-const swipePower = (offset: number, velocity: number) => {
-  return Math.abs(offset) * velocity;
-};
-
 export default function Modal({
   maxLegnth,
   imageIndex,
@@ -43,12 +38,7 @@ export default function Modal({
   const emptyArray = Array.from({ length: maxLegnth }, () => Math.random());
   const [mounted, setMounted] = useState(false);
 
-  const [[page], setPage] = useState([0, 0]);
   const [direction, setDirection] = useState(0);
-
-  const paginate = (newDirection: number) => {
-    setPage([page + newDirection, newDirection]);
-  };
 
   const variants = {
     initial: (direction: number) => {

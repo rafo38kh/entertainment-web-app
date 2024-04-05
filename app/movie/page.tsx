@@ -1,7 +1,6 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { BookmarkContext } from "@/contexts/BookmarksContextProvider";
 
 import api from "@/lib/api";
 
@@ -10,23 +9,10 @@ import Pagination from "@/components/Pagination";
 import GenresFilter from "@/components/GenresFilter";
 import CardLoading from "@/components/CardLoading";
 
-import { useBookmarks } from "@/hooks/useBookmarks";
-import { useGetUsersInfo } from "@/hooks/useGetUsresInfo";
-
 import { FilterOptions, PopularMovies, MoviesData } from "@/types";
 import CardList from "@/components/CardList";
 
 export default function MoviesPage() {
-  const parsedUser = useGetUsersInfo();
-  const { getBookmarks } = useBookmarks();
-  const { setBookmarks } = useContext(BookmarkContext);
-
-  useEffect(() => {
-    if (parsedUser?.userID) {
-      getBookmarks(parsedUser?.userID, setBookmarks);
-    }
-  }, []);
-
   const initialFilterOptions: FilterOptions = {
     adult: false,
     language: "en-US",

@@ -26,10 +26,11 @@ export default function Card<T>({
   getKey,
   getPosterPath,
 }: CardProps<T>) {
+  const { isAuth } = useContext(AuthContext);
+  const { bookmarks } = useContext(BookmarkContext);
+
   const parsedUser = useGetUsersInfo();
   const { addBookmarks, removeBookmarks } = useBookmarks();
-  const { bookmarks } = useContext(BookmarkContext);
-  const { isAuth } = useContext(AuthContext);
 
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 

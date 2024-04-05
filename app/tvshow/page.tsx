@@ -4,13 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import api from "@/lib/api";
 
+import CardList from "@/components/CardList";
 import ScrollGrid from "@/components/ScrollGrid";
-import CardLoading from "@/components/CardLoading";
 import Pagination from "@/components/Pagination";
+import CardLoading from "@/components/CardLoading";
 import GenresFilter from "@/components/GenresFilter";
 
 import { FilterOptions, TVShowsData, TVData } from "@/types";
-import CardList from "@/components/CardList";
 
 export default function TvShowsPage() {
   const initialFilterOptions: FilterOptions = {

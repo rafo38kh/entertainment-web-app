@@ -35,7 +35,7 @@ export default function Bookmarks() {
     { movies: [], tvShows: [] }
   );
 
-  return isAuth && bookmarks.length > 0 ? (
+  return isAuth && bookmarks?.length > 0 ? (
     <div className="px-4">
       <div>
         {movies.length > 0 && (
@@ -58,7 +58,7 @@ export default function Bookmarks() {
       </div>
 
       <div>
-        {tvShows.length > 0 && (
+        {tvShows?.length > 0 && (
           <span className="text-2xl lg:text-4xl px-4">TV Shows</span>
         )}
 
