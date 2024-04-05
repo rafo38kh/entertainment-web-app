@@ -138,15 +138,14 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
     ?.at(0);
 
   const currentIFrameKey = movieId ? IFrameMovieKey : IFrameTVKey;
+  const backdrop =
+    data?.backdrop_path &&
+    `url(https://image.tmdb.org/t/p/w400${data?.backdrop_path})`;
 
   return (
     <>
       <div
-        style={{
-          backgroundImage: `url(https://image.tmdb.org/t/p/w400${
-            data?.backdrop_path && data?.backdrop_path
-          })`,
-        }}
+        style={{ backgroundImage: backdrop }}
         className="relative w-full lg:rounded-xl bg-cover bg-center bg-no-repeat overflow-hidden"
       >
         {/* {currentIFrameKey && (
