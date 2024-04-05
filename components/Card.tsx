@@ -42,7 +42,7 @@ export default function Card<T>({
     (bookmark) => bookmark?.movieId == getKey(data)
   );
 
-  const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
+  // const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
 
   return (
     <>
@@ -54,7 +54,8 @@ export default function Card<T>({
       >
         <motion.div
           variants={cardList}
-          initial={!isSmallDevice && "hidden"}
+          // initial={!isSmallDevice && "hidden"}
+          initial={!true && "hidden"}
           whileHover="visible"
           className="relative w-full h-full lg:flex lg:items-end"
         >
@@ -85,7 +86,6 @@ export default function Card<T>({
           </Link>
           <motion.button
             type="button"
-            // variants={!isSmallDevice ? item : undefined}
             variants={cardItem}
             className="absolute bg-black/75 aspect-square h-10 right-0 rounded-full top-2 lg:top-auto lg:w-5/6 lg:bottom-2 mx-4 lg:rounded-lg lg:py-2 lg:hidden lg:group-hover:flex lg:justify-center lg:items-center"
             onClick={() => {
