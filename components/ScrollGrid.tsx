@@ -21,7 +21,7 @@ type ScrollGridProps = {
 };
 
 function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
-  const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
+  // const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
   const [currentX, setCurrentX] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -37,12 +37,8 @@ function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
           setCurrentX(e.clientX);
         }}
         onHoverEnd={() => setIsHovered(false)}
-        variants={
-          isSmallDevice ? undefined : scrolGridListVarints(isHovered, currentX)
-        }
-        className={`flex gap-4 no-scrollbar mt-4 ${
-          isSmallDevice ? "overflow-x-scroll" : null
-        }`}
+        variants={scrolGridListVarints(isHovered, currentX)}
+        className={`flex gap-4 no-scrollbar mt-4`}
       >
         {data?.map((el) => (
           <motion.li
