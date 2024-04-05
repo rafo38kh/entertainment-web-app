@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import ScrollGridLoading from "./ScrollGridLoading";
-// import { useMediaQuery } from "@uidotdev/usehooks";
+import { useMediaQuery } from "@uidotdev/usehooks";
 
 import { motion } from "framer-motion";
 
@@ -21,7 +21,7 @@ type ScrollGridProps = {
 };
 
 function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
-  // const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
   const [currentX, setCurrentX] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -38,12 +38,10 @@ function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
         }}
         onHoverEnd={() => setIsHovered(false)}
         variants={
-          // isSmallDevice ? undefined : scrolGridListVarints(isHovered, currentX)
-          true ? undefined : scrolGridListVarints(isHovered, currentX)
+          isSmallDevice ? undefined : scrolGridListVarints(isHovered, currentX)
         }
         className={`flex gap-4 no-scrollbar mt-4 ${
-          true ? "overflow-x-scroll" : null
-          // isSmallDevice ? "overflow-x-scroll" : null
+          isSmallDevice ? "overflow-x-scroll" : null
         }`}
       >
         {data?.map((el) => (

@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-// import { useMediaQuery } from "@uidotdev/usehooks";
+import { useMediaQuery } from "@uidotdev/usehooks";
 import { AuthContext } from "@/contexts/AuthContextProvider";
 
 import { useBookmarks } from "@/hooks/useBookmarks";
@@ -43,7 +43,7 @@ export default function Card<T>({
     (bookmark) => bookmark?.movieId == getKey(data)
   );
 
-  // const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
+  const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
 
   return (
     <>
@@ -55,8 +55,7 @@ export default function Card<T>({
       >
         <motion.div
           variants={cardList}
-          // initial={!isSmallDevice && "hidden"}
-          initial={!true && "hidden"}
+          initial={!isSmallDevice && "hidden"}
           whileHover="visible"
           className="relative w-full h-full lg:flex lg:items-end"
         >
