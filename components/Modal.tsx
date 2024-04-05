@@ -4,6 +4,7 @@ import React, {
   SetStateAction,
   useState,
   useEffect,
+  useRef,
 } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -71,9 +72,11 @@ export default function Modal({
 
   useEffect(() => setMounted(true), []);
 
-  const ref = useOutsideClick(() =>
-    setIsModalOpen(false)
-  ) as RefObject<HTMLDivElement>;
+  // const ref = useOutsideClick(() =>
+  //   setIsModalOpen(false)
+  // ) as RefObject<HTMLDivElement>;
+
+  const ref = useRef<HTMLDivElement>(null);
 
   const handlePreviousImage = (index: number) => {
     setDirection(-1);
@@ -89,14 +92,35 @@ export default function Modal({
     } else setImageIndex(imageIndex + 1);
   };
 
+  const handleClickOutsideModal = (event: MouseEvent) => {
+    // If modal is open and the click is outside the modal content
+    if (
+      isModalOpen &&
+      event.target instanceof HTMLElement &&
+      !ref.current?.contains(event.target)
+    ) {
+      setIsModalOpen(false); // Close the modal
+    }
+  };
+
+  useEffect(() => {
+    // Add event listener to handle click outside modal
+    document.addEventListener("mousedown", handleClickOutsideModal);
+
+    // Remove event listener when component unmounts
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideModal);
+    };
+  }, [isModalOpen]); // Listen for changes to isModalOpen
+
   return mounted
     ? createPortal(
-        <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-4 lg:px-8">
+        <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-8">
           {isModalOpen && (
             <AnimatePresence initial={false} custom={direction}>
               <div
                 ref={ref}
-                className="w-full flex flex-col gap-2 items-center"
+                className="w-full flex flex-col gap-2 items-center pointer-events-none"
               >
                 <div className="flex flex-row justify-center lg:gap-8 items-center w-full ">
                   <motion.button

@@ -405,7 +405,7 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
                   <motion.li
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1, transition: { duration: 3 } }}
-                    className="min-w-[11.875rem] min-h-[7.0625rem]"
+                    className="min-w-[10rem] min-h-[6.0625rem]"
                     key={backdrop?.file_path}
                   >
                     <motion.button
@@ -416,13 +416,6 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
                     >
                       <Image
                         className="w-full h-full"
-                        style={{
-                          maxWidth: "100%",
-                          height: "auto",
-                          objectFit: "cover",
-                        }}
-                        priority={false}
-                        loading="lazy"
                         width={backdrop?.width || 1000}
                         height={backdrop?.height || 1000}
                         alt={backdrop?.file_path || ""}
