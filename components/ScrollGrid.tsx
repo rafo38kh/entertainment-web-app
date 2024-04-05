@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import ScrollGridLoading from "./ScrollGridLoading";
-import { useMediaQuery } from "@uidotdev/usehooks";
+// import { useMediaQuery } from "@uidotdev/usehooks";
 
 import { motion } from "framer-motion";
 
@@ -21,7 +21,7 @@ type ScrollGridProps = {
 };
 
 function ScrollGrid({ data, type, isLoading }: ScrollGridProps) {
-  const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
+  // const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
   const [currentX, setCurrentX] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 

@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useMediaQuery } from "@uidotdev/usehooks";
+// import { useMediaQuery } from "@uidotdev/usehooks";
 import { AuthContext } from "@/contexts/AuthContextProvider";
 
 import { useBookmarks } from "@/hooks/useBookmarks";
