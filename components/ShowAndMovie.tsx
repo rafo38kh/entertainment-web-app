@@ -149,13 +149,13 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
         }}
         className="relative w-full lg:rounded-xl bg-cover bg-center bg-no-repeat overflow-hidden"
       >
-        {currentIFrameKey && (
+        {/* {currentIFrameKey && (
           <iframe
             className="h-full w-full absolute overflow-hidden scale-150"
             allow="autoplay; encrypted-media"
             src={`https://www.youtube.com/embed/${currentIFrameKey}?autoplay=1&loop=1&playlist=${currentIFrameKey}&controls=0&disablekb=0&fs=0&iv_load_policy=3&rel=0`}
           />
-        )}
+        )} */}
 
         <div className="h-full md:h-full w-full lg:rounded-lg bg-gradient-to-bl from-black/50 to-black/15 px-6 p-4 backdrop-blur-sm backdrop-filter flex flex-col items-center justify-center">
           <div className="grid md:grid-cols-2 md:grid-rows-[1fr_auto] gap-4 h-max">
