@@ -416,6 +416,13 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
                     >
                       <Image
                         className="w-full h-full"
+                        style={{
+                          maxWidth: "100%",
+                          height: "auto",
+                          objectFit: "cover",
+                        }}
+                        priority={false}
+                        loading="lazy"
                         width={backdrop?.width || 1000}
                         height={backdrop?.height || 1000}
                         alt={backdrop?.file_path || ""}
