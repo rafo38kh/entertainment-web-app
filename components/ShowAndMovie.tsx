@@ -439,10 +439,11 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
 
       {isModalOpen && (
         <Modal
+          images={images}
           maxLegnth={MAX_LENGTH}
           imageIndex={imageIndex}
-          movieImages={movieImages}
-          tvShowImages={tvShowImages}
+          // movieImages={movieImages}
+          // tvShowImages={tvShowImages}
           isModalOpen={isModalOpen}
           setImageIndex={setImageIndex}
           setIsModalOpen={setIsModalOpen}

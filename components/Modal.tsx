@@ -1,44 +1,40 @@
-import React, {
+import {
   Dispatch,
-  RefObject,
-  SetStateAction,
   useState,
   useEffect,
-  useRef,
+  RefObject,
+  SetStateAction,
 } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-
-import { createPortal } from "react-dom";
-
 import { usePathname } from "next/navigation";
+import { createPortal } from "react-dom";
 
 import useOutsideClick from "@/hooks/useOutsideClick";
 
-import { MovieImages, TVShowImages } from "@/types";
 import { hoverEffect } from "@/animations";
+
+import { MovieImages, TVShowImages } from "@/types";
 
 type ModalProps = {
   maxLegnth: number;
   imageIndex: number;
   isModalOpen: boolean;
-  movieImages: MovieImages | undefined;
-  tvShowImages: TVShowImages | undefined;
+  images: MovieImages | TVShowImages | undefined;
   setImageIndex: Dispatch<SetStateAction<number>>;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function Modal({
+  images,
   maxLegnth,
   imageIndex,
   isModalOpen,
   setImageIndex,
   setIsModalOpen,
-  movieImages,
-  tvShowImages,
 }: ModalProps) {
   const emptyArray = Array.from({ length: maxLegnth }, () => Math.random());
-  const [mounted, setMounted] = useState(false);
 
+  const [mounted, setMounted] = useState(false);
   const [direction, setDirection] = useState(0);
 
   const variants = {
@@ -72,55 +68,32 @@ export default function Modal({
 
   useEffect(() => setMounted(true), []);
 
-  // const ref = useOutsideClick(() =>
-  //   setIsModalOpen(false)
-  // ) as RefObject<HTMLDivElement>;
-
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useOutsideClick(() =>
+    setIsModalOpen(false)
+  ) as RefObject<HTMLDivElement>;
 
   const handlePreviousImage = (index: number) => {
     setDirection(-1);
-    if (imageIndex === 0) {
+    if (index === 0) {
       setImageIndex(maxLegnth - 1);
-    } else setImageIndex(imageIndex - 1);
+    } else setImageIndex(index - 1);
   };
 
   const handleNextImage = (index: number) => {
     setDirection(1);
-    if (imageIndex === maxLegnth - 1) {
+    if (index === maxLegnth - 1) {
       setImageIndex(0);
-    } else setImageIndex(imageIndex + 1);
+    } else setImageIndex(index + 1);
   };
-
-  const handleClickOutsideModal = (event: MouseEvent) => {
-    // If modal is open and the click is outside the modal content
-    if (
-      isModalOpen &&
-      event.target instanceof HTMLElement &&
-      !ref.current?.contains(event.target)
-    ) {
-      setIsModalOpen(false); // Close the modal
-    }
-  };
-
-  useEffect(() => {
-    // Add event listener to handle click outside modal
-    document.addEventListener("mousedown", handleClickOutsideModal);
-
-    // Remove event listener when component unmounts
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutsideModal);
-    };
-  }, [isModalOpen]); // Listen for changes to isModalOpen
 
   return mounted
     ? createPortal(
-        <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-8">
+        <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-4">
           {isModalOpen && (
             <AnimatePresence initial={false} custom={direction}>
               <div
                 ref={ref}
-                className="w-full flex flex-col gap-2 items-center pointer-events-none"
+                className="w-full flex flex-col gap-2 items-center"
               >
                 <div className="flex flex-row justify-center lg:gap-8 items-center w-full ">
                   <motion.button
@@ -159,18 +132,14 @@ export default function Modal({
                         objectFit: "cover",
                       }}
                       loading="lazy"
-                      width={movieImages?.backdrops[imageIndex]?.width || 100}
-                      height={
-                        movieImages?.backdrops[imageIndex]?.height || 1500
-                      }
+                      width={images?.backdrops[imageIndex]?.width || 100}
+                      height={images?.backdrops[imageIndex]?.height || 1500}
                       className="w-full h-full rounded-lg max-w-[80rem]"
                       alt={`https://image.tmdb.org/t/p/original${
-                        movieImages?.backdrops?.slice(0, 6)[imageIndex]
-                          ?.file_path
+                        images?.backdrops?.slice(0, 6)[imageIndex]?.file_path
                       }`}
                       src={`https://image.tmdb.org/t/p/original${
-                        movieImages?.backdrops?.slice(0, 6)[imageIndex]
-                          ?.file_path
+                        images?.backdrops?.slice(0, 6)[imageIndex]?.file_path
                       }`}
                     />
                   )}
@@ -184,14 +153,11 @@ export default function Modal({
                       key={imageIndex}
                       custom={direction}
                       className="w-full h-full rounded-lg"
-                      width={tvShowImages?.backdrops[imageIndex]?.width || 1000}
-                      height={
-                        tvShowImages?.backdrops[imageIndex]?.height || 1500
-                      }
-                      alt={tvShowImages?.backdrops[imageIndex]?.file_path || ""}
+                      width={images?.backdrops[imageIndex]?.width || 1000}
+                      height={images?.backdrops[imageIndex]?.height || 1500}
+                      alt={images?.backdrops[imageIndex]?.file_path || ""}
                       src={`https://image.tmdb.org/t/p/original${
-                        tvShowImages?.backdrops?.slice(0, 6)[imageIndex]
-                          ?.file_path
+                        images?.backdrops?.slice(0, 6)[imageIndex]?.file_path
                       }`}
                     />
                   )}
@@ -219,13 +185,13 @@ export default function Modal({
                   </motion.button>
                 </div>
 
-                <ul className="flex flex-row gap-2">
+                <ul className="flex gap-2 ">
                   {emptyArray?.map((_, index) => (
                     <motion.button
                       key={index}
                       whileHover={hoverEffect.whileHover}
                       transition={hoverEffect.transition}
-                      className={`p-1  rounded-full ${
+                      className={`p-1 rounded-full ${
                         index === imageIndex
                           ? "bg-movieGreyishBlue"
                           : "bg-movieGreyishBlue/35"
@@ -238,7 +204,6 @@ export default function Modal({
             </AnimatePresence>
           )}
         </div>,
-
         document.body
       )
     : null;
