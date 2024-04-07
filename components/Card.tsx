@@ -3,7 +3,8 @@ import React, { useContext, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-// import { useMediaQuery } from "@uidotdev/usehooks";
+
+import useMediaQuery from "@/hooks/useMediaQuery";
 import { AuthContext } from "@/contexts/AuthContextProvider";
 
 import { useBookmarks } from "@/hooks/useBookmarks";
@@ -28,6 +29,7 @@ export default function Card<T>({
 }: CardProps<T>) {
   const { isAuth } = useContext(AuthContext);
   const { bookmarks } = useContext(BookmarkContext);
+  const isDesktop = useMediaQuery("(min-width: 960px)");
 
   const parsedUser = useGetUsersInfo();
   const { addBookmarks, removeBookmarks } = useBookmarks();
@@ -55,8 +57,8 @@ export default function Card<T>({
       >
         <motion.div
           variants={cardList}
-          // initial={!isSmallDevice && "hidden"}
-          initial="hidden"
+          initial={isDesktop && "hidden"}
+          // initial="hidden"
           whileHover="visible"
           className="relative w-full h-full lg:flex lg:items-end"
         >
