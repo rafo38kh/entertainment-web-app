@@ -4,6 +4,7 @@ import {
   useEffect,
   RefObject,
   SetStateAction,
+  useRef,
 } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { usePathname } from "next/navigation";
@@ -68,9 +69,9 @@ export default function Modal({
 
   useEffect(() => setMounted(true), []);
 
-  const ref = useOutsideClick(() =>
-    setIsModalOpen(false)
-  ) as RefObject<HTMLDivElement>;
+  // const ref = useOutsideClick(() =>
+  //   setIsModalOpen(false)
+  // ) as RefObject<HTMLDivElement>;
 
   const handlePreviousImage = (index: number) => {
     setDirection(-1);
@@ -86,21 +87,44 @@ export default function Modal({
     } else setImageIndex(index + 1);
   };
 
+  useEffect(() => {
+    if (window) {
+      window?.document?.body.classList.add("overflow-hidden");
+    }
+  }, []);
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      const handleClickOutsideModal = (event: MouseEvent) => {
+        if (ref.current && !ref.current.contains(event.target as Node)) {
+          setIsModalOpen(false);
+        }
+      };
+
+      document.addEventListener("mousedown", handleClickOutsideModal);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutsideModal);
+      };
+    }
+  }, [isModalOpen, setIsModalOpen]);
+
   return mounted
     ? createPortal(
-        <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-4">
+        <div
+          ref={ref}
+          className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-8"
+        >
           {isModalOpen && (
             <AnimatePresence initial={false} custom={direction}>
-              <div
-                ref={ref}
-                className="w-full flex flex-col gap-2 items-center"
-              >
+              <div className="w-full flex flex-col gap-2 items-center">
                 <div className="flex flex-row justify-center lg:gap-8 items-center w-full ">
                   <motion.button
                     whileHover={hoverEffect.whileHover}
                     transition={hoverEffect.transition}
                     onClick={() => handlePreviousImage(imageIndex)}
-                    className="lg:p-2 rounded-full bg-black/35"
+                    className="rounded-full bg-black/35"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +141,6 @@ export default function Modal({
                       />
                     </svg>
                   </motion.button>
-
                   {pathname.includes("/movie") && (
                     <motion.img
                       variants={variants}
@@ -143,7 +166,6 @@ export default function Modal({
                       }`}
                     />
                   )}
-
                   {pathname.includes("/tvshow") && (
                     <motion.img
                       variants={variants}
@@ -161,7 +183,6 @@ export default function Modal({
                       }`}
                     />
                   )}
-
                   <motion.button
                     whileHover={hoverEffect.whileHover}
                     transition={hoverEffect.transition}
@@ -184,14 +205,13 @@ export default function Modal({
                     </svg>
                   </motion.button>
                 </div>
-
-                <ul className="flex gap-2 ">
+                <ul className="flex gap-3">
                   {emptyArray?.map((_, index) => (
                     <motion.button
                       key={index}
                       whileHover={hoverEffect.whileHover}
                       transition={hoverEffect.transition}
-                      className={`p-1 rounded-full ${
+                      className={`p-2 rounded-full ${
                         index === imageIndex
                           ? "bg-movieGreyishBlue"
                           : "bg-movieGreyishBlue/35"
