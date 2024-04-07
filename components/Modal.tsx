@@ -112,114 +112,116 @@ export default function Modal({
 
   return mounted
     ? createPortal(
-        <div
-          ref={ref}
-          className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-8"
-        >
+        <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-8">
           {isModalOpen && (
             <AnimatePresence initial={false} custom={direction}>
-              <div className="w-full flex flex-col gap-2 items-center">
-                <div className="flex flex-row justify-center lg:gap-8 items-center w-full ">
-                  <motion.button
-                    whileHover={hoverEffect.whileHover}
-                    transition={hoverEffect.transition}
-                    onClick={() => handlePreviousImage(imageIndex)}
-                    className="rounded-full bg-black/35"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
-                      />
-                    </svg>
-                  </motion.button>
-                  {pathname.includes("/movie") && (
-                    <motion.img
-                      variants={variants}
-                      animate="animate"
-                      initial="initial"
-                      exit="exit"
-                      key={imageIndex}
-                      custom={direction}
-                      style={{
-                        maxWidth: "100%",
-                        height: "auto",
-                        objectFit: "cover",
-                      }}
-                      loading="lazy"
-                      width={images?.backdrops[imageIndex]?.width || 100}
-                      height={images?.backdrops[imageIndex]?.height || 1500}
-                      className="w-full h-full rounded-lg max-w-[80rem]"
-                      alt={`https://image.tmdb.org/t/p/original${
-                        images?.backdrops?.slice(0, 6)[imageIndex]?.file_path
-                      }`}
-                      src={`https://image.tmdb.org/t/p/original${
-                        images?.backdrops?.slice(0, 6)[imageIndex]?.file_path
-                      }`}
-                    />
-                  )}
-                  {pathname.includes("/tvshow") && (
-                    <motion.img
-                      variants={variants}
-                      animate="animate"
-                      initial="initial"
-                      exit="exit"
-                      key={imageIndex}
-                      custom={direction}
-                      className="w-full h-full rounded-lg"
-                      width={images?.backdrops[imageIndex]?.width || 1000}
-                      height={images?.backdrops[imageIndex]?.height || 1500}
-                      alt={images?.backdrops[imageIndex]?.file_path || ""}
-                      src={`https://image.tmdb.org/t/p/original${
-                        images?.backdrops?.slice(0, 6)[imageIndex]?.file_path
-                      }`}
-                    />
-                  )}
-                  <motion.button
-                    whileHover={hoverEffect.whileHover}
-                    transition={hoverEffect.transition}
-                    onClick={() => handleNextImage(imageIndex)}
-                    className="lg:p-2 rounded-full bg-black/35"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
-                      />
-                    </svg>
-                  </motion.button>
-                </div>
-                <ul className="flex gap-3">
-                  {emptyArray?.map((_, index) => (
+              <div className="w-full flex flex-col gap-2 items-center px-8">
+                <div
+                  ref={ref}
+                  className="h-full w-full flex items-center justify-center flex-col gap-4"
+                >
+                  <div className="flex flex-row justify-center lg:gap-8 items-center w-full px-8">
                     <motion.button
-                      key={index}
                       whileHover={hoverEffect.whileHover}
                       transition={hoverEffect.transition}
-                      className={`p-2 rounded-full ${
-                        index === imageIndex
-                          ? "bg-movieGreyishBlue"
-                          : "bg-movieGreyishBlue/35"
-                      }`}
-                      onClick={() => setImageIndex(index)}
-                    />
-                  ))}
-                </ul>
+                      onClick={() => handlePreviousImage(imageIndex)}
+                      className="rounded-full bg-black/35"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
+                        />
+                      </svg>
+                    </motion.button>
+                    {pathname.includes("/movie") && (
+                      <motion.img
+                        variants={variants}
+                        animate="animate"
+                        initial="initial"
+                        exit="exit"
+                        key={imageIndex}
+                        custom={direction}
+                        style={{
+                          maxWidth: "100%",
+                          height: "auto",
+                          objectFit: "cover",
+                        }}
+                        loading="lazy"
+                        width={images?.backdrops[imageIndex]?.width || 100}
+                        height={images?.backdrops[imageIndex]?.height || 1500}
+                        className="w-full h-full rounded-lg max-w-[80rem]"
+                        alt={`https://image.tmdb.org/t/p/original${
+                          images?.backdrops?.slice(0, 6)[imageIndex]?.file_path
+                        }`}
+                        src={`https://image.tmdb.org/t/p/original${
+                          images?.backdrops?.slice(0, 6)[imageIndex]?.file_path
+                        }`}
+                      />
+                    )}
+                    {pathname.includes("/tvshow") && (
+                      <motion.img
+                        variants={variants}
+                        animate="animate"
+                        initial="initial"
+                        exit="exit"
+                        key={imageIndex}
+                        custom={direction}
+                        className="w-full h-full rounded-lg"
+                        width={images?.backdrops[imageIndex]?.width || 1000}
+                        height={images?.backdrops[imageIndex]?.height || 1500}
+                        alt={images?.backdrops[imageIndex]?.file_path || ""}
+                        src={`https://image.tmdb.org/t/p/original${
+                          images?.backdrops?.slice(0, 6)[imageIndex]?.file_path
+                        }`}
+                      />
+                    )}
+                    <motion.button
+                      whileHover={hoverEffect.whileHover}
+                      transition={hoverEffect.transition}
+                      onClick={() => handleNextImage(imageIndex)}
+                      className="lg:p-2 rounded-full bg-black/35"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
+                        />
+                      </svg>
+                    </motion.button>
+                  </div>
+                  <ul className="flex gap-3 w-max">
+                    {emptyArray?.map((_, index) => (
+                      <motion.button
+                        key={index}
+                        whileHover={hoverEffect.whileHover}
+                        transition={hoverEffect.transition}
+                        className={`p-2 rounded-full ${
+                          index === imageIndex
+                            ? "bg-movieGreyishBlue"
+                            : "bg-movieGreyishBlue/35"
+                        }`}
+                        onClick={() => setImageIndex(index)}
+                      />
+                    ))}
+                  </ul>
+                </div>
               </div>
             </AnimatePresence>
           )}

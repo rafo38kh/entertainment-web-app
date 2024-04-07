@@ -158,7 +158,7 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
 
         <div className="h-full md:h-full w-full lg:rounded-lg bg-gradient-to-bl from-black/50 to-black/15 px-6 p-4 backdrop-blur-sm backdrop-filter flex flex-col items-center justify-center">
           <div className="grid md:grid-cols-2 md:grid-rows-[1fr_auto] gap-4 h-max">
-            <div className="w-full h-full relative lg:rounded-lg overflow-hidden">
+            <div className="w-full relative lg:rounded-lg overflow-hidden">
               {data && "backdrop_path" in data && data?.backdrop_path ? (
                 <Image
                   className="w-full rounded-md"
