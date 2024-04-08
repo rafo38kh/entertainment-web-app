@@ -88,10 +88,21 @@ export default function Modal({
   };
 
   useEffect(() => {
-    if (window) {
-      window?.document?.body.classList.add("overflow-hidden");
-    }
-  }, []);
+    const handleBodyClass = () => {
+      if (isModalOpen) {
+        document.body.classList.add("overflow-hidden");
+      } else {
+        document.body.classList.remove("overflow-hidden");
+      }
+    };
+
+    handleBodyClass(); // Call once on mount to set initial state
+
+    // Add/remove class on isModalOpen change
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [isModalOpen]);
 
   const ref = useRef<HTMLDivElement>(null);
 

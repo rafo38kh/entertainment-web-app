@@ -45,8 +45,6 @@ export default function Card<T>({
     (bookmark) => bookmark?.movieId == getKey(data)
   );
 
-  // const isSmallDevice = useMediaQuery("only screen and (max-width : 1024px)");
-
   return (
     <>
       <motion.li
