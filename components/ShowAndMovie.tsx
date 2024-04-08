@@ -151,8 +151,8 @@ export default function ShowAndMovie({ tvShowId, movieId }: TVMoiveProps) {
         {currentIFrameKey && (
           <iframe
             className="h-full w-full absolute overflow-hidden scale-150"
-            allow="autoplay; encrypted-media"
-            src={`https://www.youtube.com/embed/${currentIFrameKey}?autoplay=1&loop=1&playlist=${currentIFrameKey}&controls=0&disablekb=0&fs=0&iv_load_policy=3&rel=0`}
+            allow="autoplay; encrypted-mediai"
+            src={`https://www.youtube.com/embed/${currentIFrameKey}?autoplay=1&loop=1&playlist=${currentIFrameKey}&controls=0&disablekb=0&fs=0&iv_load_policy=3&rel=0&mute=1`}
           />
         )}
 
