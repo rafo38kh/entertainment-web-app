@@ -115,12 +115,12 @@ export default function Modal({
         <div className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black/80 px-8">
           {isModalOpen && (
             <AnimatePresence initial={false} custom={direction}>
-              <div className="w-full flex flex-col gap-2 items-center px-8">
+              <div className="w-full flex flex-col gap-2 items-center md:px-8">
                 <div
                   ref={ref}
                   className="h-full w-full flex items-center justify-center flex-col gap-4"
                 >
-                  <div className="flex flex-row justify-center lg:gap-8 items-center w-full px-8">
+                  <div className="flex flex-row justify-center lg:gap-8 items-center w-full md:px-8">
                     <motion.button
                       whileHover={hoverEffect.whileHover}
                       transition={hoverEffect.transition}
